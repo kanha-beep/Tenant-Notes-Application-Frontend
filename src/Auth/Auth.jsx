@@ -156,7 +156,7 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
                     >
                       <option value="" disabled>Select tenant</option>
                       <option value="Acme">Acme</option>
-                      <option value="Globex">Globex</option>
+                      <option value="EFGH">EFGH</option>
                     </select>
                   </div>
 
