@@ -14,13 +14,12 @@ export default function EditButton({ userId, noteId }) {
   return (
     <div>
       {/* user = edit note*/}
-      {userRole === "user" && (
+      {userRole === "admin" && (
         <button
           className={buttonClass}
           onClick={() => navigate(`/notes/${noteId}/edit`, { state: "notes" })}
         >
           <span>✏️</span>
-          <span>Edit Note</span>
         </button>
       )}
       {/* admin and user = edit user */}
@@ -37,7 +36,7 @@ export default function EditButton({ userId, noteId }) {
         </button>
       )}
       {/* admin and notes = edit note */}
-      {userRole === "admin" && toShowAdmin === "notes" && (
+      {userRole === "admin" && (
         <button
           className={buttonClass}
           onClick={() => {
@@ -45,8 +44,7 @@ export default function EditButton({ userId, noteId }) {
             navigate(`/notes/${noteId}/edit`, { state: "notes" });
           }}
         >
-          <span>✏️</span>
-          {userRole === "admin" && <span>Delete</span>}
+          {userRole === "admin" && <span>✏️</span>}
         </button>
       )}
     </div>
