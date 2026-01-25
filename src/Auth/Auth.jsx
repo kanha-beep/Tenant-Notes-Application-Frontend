@@ -28,7 +28,7 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
         console.log("url signup: ", url);
         const res = await api.post(`/auth/${url}`, userForm);
         console.log("Sign up done: ", res.data.data);
-        navigate("/auth")
+        setIsPage(true)
       } catch (e) {
         if ([401, 402, 403].includes(e.response.status))
           setMsg(e.response.data);
