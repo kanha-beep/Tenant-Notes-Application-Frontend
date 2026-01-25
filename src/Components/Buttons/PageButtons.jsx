@@ -17,6 +17,7 @@ export default function PageButtons({
   const [totalNotes, setTotalNotes] = useState(0);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [totalNotesOfCompany, setTotalNotesOfCompany] = useState(0);
   const handlePage = async () => {
     // user
     if (userRole === "user") {
@@ -26,13 +27,15 @@ export default function PageButtons({
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       console.log("1. pagination: role=users", res.data.users);
       setPage(res.data.page);
       setTotalPages(res.data.totalPages);
       setTotalNotes(res.data.totalNotes);
       setFilterNotes(res.data.notes);
+
+      console.log(res?.data);
     } else {
       try {
         // admin + users
@@ -43,11 +46,11 @@ export default function PageButtons({
               headers: {
                 Authorization: `Bearer ${token}`,
               },
-            }
+            },
           );
           console.log(
             "2. pagination search: role=admin show=users",
-            res.data.users
+            res.data.users,
           );
           setPage(res.data.page);
           setTotalPages(res.data.totalPages);
@@ -63,16 +66,14 @@ export default function PageButtons({
               headers: {
                 Authorization: `Bearer ${token}`,
               },
-            }
+            },
           );
-          console.log(
-            "3. pagination search: role=admin show=notes",
-            res.data
-          );
+          console.log("3. pagination search: role=admin show=notes", res.data);
           setPage(res.data.page);
           setTotalPages(res.data.totalPages);
           setTotalNotes(res.data.totalNotes);
           setFilterNotes(res.data.notes);
+          setTotalNotesOfCompany(res?.data?.totalNotesOfCompany);
         }
       } catch (e) {
         console.log("error in pagination: ", e.response.data);
@@ -86,13 +87,10 @@ export default function PageButtons({
   useEffect(() => {
     setPage(1); // Reset to page 1 when switching between users and notes
   }, [toShowAdmin]);
-  
+
   const isUsers = userRole === "admin" && toShowAdmin === "users";
   const totalCount = isUsers ? totalUsers : totalNotes;
   const itemType = isUsers ? "Users" : "Notes";
-
-
-
   return (
     <>
       {/* Search and Sort Section */}
@@ -118,42 +116,59 @@ export default function PageButtons({
           <div className="col-md-6">
             <p className="text-muted mb-0">
               <span className="me-2">{isUsers ? "👥" : "📝"}</span>
-              Total {totalCount} {itemType.toLowerCase()}
+              Total{" "}
+              <span>
+                {itemType.toLowerCase()} {userRole === "user" && totalCount}
+                {userRole === "admin" && toShowAdmin === "notes" && totalNotesOfCompany}
+              </span>{" "}
+              {userRole === "admin" && toShowAdmin === "users" && totalCount}
             </p>
           </div>
-          
+
           {/* Pagination */}
           <div className="col-md-6">
             <div className="d-flex justify-content-md-end justify-content-center">
-              <small className="text-muted me-3">Page {page} of {totalPages}</small>
+              <small className="text-muted me-3">
+                Page {page} of {totalPages}
+              </small>
               <nav>
                 <ul className="pagination pagination-sm mb-0">
                   {/* Previous Button */}
-                  <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
-                    <button 
-                      className="page-link" 
+                  <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
+                    <button
+                      className="page-link"
                       onClick={() => setPage(Math.max(1, page - 1))}
                       disabled={page === 1}
                     >
                       ◀️ Previous
                     </button>
                   </li>
-                  
+
                   {/* Page Numbers */}
-                  {Array.from({length: Math.min(5, totalPages)}, (_, i) => {
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     const pageNum = Math.max(1, page - 2) + i;
                     if (pageNum > totalPages) return null;
                     return (
-                      <li key={pageNum} className={`page-item ${pageNum === page ? 'active' : ''}`}>
-                        <button className="page-link" onClick={() => setPage(pageNum)}>{pageNum}</button>
+                      <li
+                        key={pageNum}
+                        className={`page-item ${pageNum === page ? "active" : ""}`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => setPage(pageNum)}
+                        >
+                          {pageNum}
+                        </button>
                       </li>
                     );
                   })}
-                  
+
                   {/* Next Button */}
-                  <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}>
-                    <button 
-                      className="page-link" 
+                  <li
+                    className={`page-item ${page === totalPages ? "disabled" : ""}`}
+                  >
+                    <button
+                      className="page-link"
                       onClick={() => setPage(Math.min(totalPages, page + 1))}
                       disabled={page === totalPages}
                     >

@@ -22,6 +22,9 @@ export default function AllNotesFinal() {
   useEffect(() => {
     if (toShowAdmin) localStorage.setItem("toShowAdmin", toShowAdmin);
   }, [toShowAdmin]);
+  // const getAllNotes = async () => {
+  //   const res = await axios.get("")
+  // }
   return (
     <div
       className={`min-h-screen transition-all duration-500 ${
@@ -38,11 +41,11 @@ export default function AllNotesFinal() {
             📝 All Notes
           </h1>
           <div className="flex justify-center">
-            <SwitchMode mode={mode} setMode={setMode} />
+            {/* <SwitchMode mode={mode} setMode={setMode} /> */}
           </div>
         </div>
 
-        <div className="mb-8">
+        <div className="mb-8 bg-success">
           <NewButton
             navigate={navigate}
             userRole={userRole}

@@ -7,6 +7,11 @@ export default function AllNotes({ toShowAdmin, filterNotes, setFilterNotes}) {
   // console.log("admin will see ", filterNotes);
   return (
     <div className="row mt-4">
+      {filterNotes.length === 0 && (
+        <div className="col-md-12 text-center">
+          <h3>Ask Admin to get work!</h3>
+        </div>
+      )}
       {filterNotes &&
         filterNotes.map((n) => (
           <AllNotesCards
