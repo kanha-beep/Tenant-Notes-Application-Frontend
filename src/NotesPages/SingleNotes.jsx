@@ -59,13 +59,12 @@ export default function Notes() {
       </div>
       {/* notes show details */}
       <div className="row justify-content-center">
-        <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+        <div className="col-12 col-sm-10 col-md-8 col-lg-6">
           {notes && (
             <div
               key={notes._id}
               className="card shadow-lg mb-4"
               style={{
-                backgroundColor: "aqua",
                 minHeight: "20rem",
                 borderRadius: "20px",
               }}
