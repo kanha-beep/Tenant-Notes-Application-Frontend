@@ -12,7 +12,7 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
     email: "",
     password: "",
     tenant: "",
-    role: "",
+    // role: "",
   });
 
   const url = isPage ? "login" : "register";
@@ -177,7 +177,7 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
                         />
                       </div>
                       
-                      <div className="mb-3">
+                      {/* <div className="mb-3">
                         <label className="form-label fw-medium text-dark">⚡ Role</label>
                         <select
                           name="role"
@@ -192,7 +192,7 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
                           <option value="user">User</option>
                           <option value="admin">Admin</option>
                         </select>
-                      </div>
+                      </div> */}
                     </>
                   )}
 
