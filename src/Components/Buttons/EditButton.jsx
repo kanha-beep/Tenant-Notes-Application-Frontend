@@ -8,7 +8,8 @@ export default function EditButton({ userId, noteId }) {
   // const toShowAdmin = localStorage.getItem("toShowAdmin");
   const toShowAdmin = localStorage.getItem("toShowAdmin");
   console.log("id for edit: ", userId); // currently notes thats good
-  const buttonClass = "btn btn-primary d-flex align-items-center gap-2 px-3 py-2 fw-medium rounded-2 shadow-sm my-2";
+  const buttonClass =
+    "btn btn-primary d-flex align-items-center gap-2 px-3 py-2 fw-medium rounded-2 shadow-sm my-2";
 
   return (
     <div>
@@ -45,7 +46,7 @@ export default function EditButton({ userId, noteId }) {
           }}
         >
           <span>✏️</span>
-          <span>Edit Note</span>
+          {userRole === "admin" && <span>Delete</span>}
         </button>
       )}
     </div>

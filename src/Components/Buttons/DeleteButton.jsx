@@ -28,7 +28,7 @@ export default function DeleteButton({
       navigate("/notes");
     }
     //notes
-    if (userRole === "user") {
+    if (userRole === "admin") {
       await api.delete(`/notes/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ export default function DeleteButton({
       onClick={() => handleDelete(n?._id)}
     >
       <span>🗑️</span>
-      <span>Delete</span>
+      {userRole === "admin" && <span>Delete</span>}
     </button>
   );
 }
