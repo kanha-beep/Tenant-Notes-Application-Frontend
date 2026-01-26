@@ -30,10 +30,11 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
     if (!isPage) {
       try {
         console.log("url signup: ", url);
+        setLoading(true);
         const res = await api.post(`/auth/${url}`, userForm);
         console.log("Sign up done: ", res.data.data);
         setIsPage(true);
-        setLoading(true);
+        setLoading(false);
       } catch (e) {
         if ([401, 402, 403].includes(e.response.status))
           setMsg(e.response.data?.message);
