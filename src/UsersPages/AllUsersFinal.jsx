@@ -16,7 +16,7 @@ export default function AllUsersFinal() {
   const [notes, setNotes] = useState([]);
   const [filterNotes, setFilterNotes] = useState([]);
   // const [toShowAdmin, setToShowAdmin] = useState(location.state);
-  localStorage.setItem("toShowAdmin", toShowAdmin)
+  // localStorage.setItem("toShowAdmin", toShowAdmin)
   const [filterUsers, setFilterUsers] = useState([]);
   const [mode, setMode] = useState(false);
   // console.log("admin will get", toShowAdmin);
