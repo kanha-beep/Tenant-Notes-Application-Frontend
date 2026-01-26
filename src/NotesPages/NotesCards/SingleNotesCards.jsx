@@ -2,7 +2,7 @@ import DeleteButton from "../../Components/Buttons/DeleteButton.jsx";
 import EditButton from "../../Components/Buttons/EditButton.jsx";
 import HomePageButton from "../../Components/Buttons/HomePageButton.jsx";
 import Checkbox from "../../Components/Buttons/Checkbox.jsx";
-export default function SingleNotesCards({
+export default function  SingleNotesCards({
   token,
   navigate,
   n,
@@ -54,7 +54,7 @@ export default function SingleNotesCards({
         </div>
         
         {/* Action Buttons */}
-        <div className="d-flex flex-wrap gap-2 pt-3 border-top">
+        <div className="d-flex align-items-center flex-wrap gap-2 pt-3">
           <DeleteButton
             token={token}
             n={n}

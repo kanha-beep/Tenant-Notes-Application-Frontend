@@ -180,6 +180,22 @@ export default function Right({ details }) {
               </div>
             </div>
           </div>
+          <div
+            className="card p-0 mt-2 border-0 lg-shadow"
+            style={{
+              background: "rgba(255,255,255,0.95)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div className="card-body">
+              {details?.allAdmins.map((admin) => (
+                <ul>
+                  {" "}
+                  <li>{admin?.email}</li>
+                </ul>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

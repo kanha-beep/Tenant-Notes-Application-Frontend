@@ -33,7 +33,7 @@ export default function PageButtons({
       setPage(res.data.page);
       setTotalPages(res.data.totalPages);
       setTotalNotes(res.data.totalNotes);
-      setFilterNotes(res.data.notes);
+      setFilterNotes(res.data.userNotes);
 
       console.log(res?.data);
     } else {
@@ -72,7 +72,7 @@ export default function PageButtons({
           setPage(res.data.page);
           setTotalPages(res.data.totalPages);
           setTotalNotes(res.data.totalNotes);
-          setFilterNotes(res.data.notes);
+          setFilterNotes(res.data.adminNotes);
           setTotalNotesOfCompany(res?.data?.totalNotesOfCompany);
         }
       } catch (e) {

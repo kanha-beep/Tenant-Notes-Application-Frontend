@@ -45,7 +45,7 @@ export default function AllNotesFinal() {
           </div>
         </div>
 
-        <div className="mb-8 bg-success">
+        <div className="mb-8">
           <NewButton
             navigate={navigate}
             userRole={userRole}
