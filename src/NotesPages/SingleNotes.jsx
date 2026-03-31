@@ -4,16 +4,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../init/instance.js";
 import SingleNotesCards from "./NotesCards/SingleNotesCards.jsx";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
-import { createToast } from "../utils/toast.js";
+import { createToast, flashToast } from "../utils/toast.js";
 
 export default function Notes() {
   const [msg, setMsg] = useState("");
   const { noteId } = useParams();
   const navigate = useNavigate();
   const token = localStorage.getItem("tokens");
+  const userRole = localStorage.getItem("role");
   const [notes, setNotes] = useState(null);
   const [check, setCheck] = useState("");
-  //all one single note done
+  const [isCheckTouched, setIsCheckTouched] = useState(false);
+
   useEffect(() => {
     const getOneNotes = async () => {
       try {
@@ -22,7 +24,6 @@ export default function Notes() {
             Authorization: `Bearer ${token}`,
           },
         });
-        // console.log("get one note AllNotes F: ", res.data);
         setNotes(res.data);
       } catch (e) {
         console.log("error Notes 1: ", e.response.data.message);
@@ -31,26 +32,35 @@ export default function Notes() {
     };
     getOneNotes();
   }, []);
-  //check
+
   useEffect(() => {
     if (notes) {
       setCheck(notes.check);
     }
   }, [notes]);
-  console.log("check: notes ", check);
+
+  const handleCheckChange = (nextValue) => {
+    setIsCheckTouched(true);
+    setCheck(nextValue);
+  };
+
   useEffect(() => {
     const updateCheck = async () => {
-      if (check === "") return;
+      if (check === "" || !isCheckTouched) return;
       const res = await api.patch(`/notes/${noteId}`, { check: check });
       console.log("check: notes ", res.data);
+
+      if (userRole === "user" && check) {
+        flashToast("Work completed successfully.", "success");
+        navigate("/notes");
+      }
     };
     updateCheck();
-  }, [check]);
+  }, [check, isCheckTouched]);
 
   return (
     <div className="container-fluid">
       <Msg msg={msg} setMsg={setMsg} />
-      {/* notes show details */}
       <div className="row justify-content-center">
         <div className="col-12 col-sm-10 col-md-8 col-lg-6">
           {notes && (
@@ -69,14 +79,13 @@ export default function Notes() {
                   navigate={navigate}
                   noteId={noteId}
                   check={check}
-                  setCheck={setCheck}
+                  setCheck={handleCheckChange}
                 />
               </div>
             </div>
           )}
         </div>
       </div>
-      {/* home page */}
       <div className="row justify-content-center">
         <div className="col-12 text-center">
           <button
