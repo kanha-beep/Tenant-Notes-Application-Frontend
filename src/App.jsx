@@ -17,6 +17,7 @@ import MyNavbar from "./Components/Navbar.jsx";
 import Plan from "./AdminPages/Plan.jsx";
 import api from "./init/instance.js";
 import Home from "./Components/Home.jsx";
+import NotFound from "./Components/NotFound.jsx";
 import Dashboard from "./AdminPages/Dashboard/Dashboard.jsx";
 import Msg from "./Components/AlertBoxes/Msg.jsx";
 import { consumeFlashToast, createToast } from "./utils/toast.js";
@@ -112,16 +113,12 @@ function App() {
             <Auth setIsLoggedIn={setIsLoggedIn} setMsg={setMsg} msg={msg} />
           }
         />
-        <Route
-          path="/logout"
-          element={
-            <Logout setIsLoggedIn={setIsLoggedIn} setIsPage={setIsPage} />
-          }
-        />
-      </Routes>
+        <Route`r`n          path="/logout"`r`n          element={`r`n            <Logout setIsLoggedIn={setIsLoggedIn} setIsPage={setIsPage} />`r`n          }`r`n        />`r`n        <Route path="*" element={<NotFound />} />`r`n      </Routes>
       </div>
     </div>
   );
 }
 
 export default App;
+
+
