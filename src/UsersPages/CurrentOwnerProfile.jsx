@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../init/instance.js";
 import GoHomeButton from "../Components/Buttons/GoHomeButton.jsx";
+import Msg from "../Components/AlertBoxes/Msg.jsx";
+import { createToast } from "../utils/toast.js";
 
 export default function CurrentOwnerProfile() {
   const { userId } = useParams();
@@ -29,13 +31,14 @@ export default function CurrentOwnerProfile() {
       // Don't set success messages
     } catch (e) {
       console.log("current AllNotes: ", e.response.data);
-      setMsg(e.response?.data?.message || "Error loading profile");
+      setMsg(createToast(e.response?.data?.message || "Error loading profile"));
     }
   };
     currentOwner();
   }, [token]);
   return (
     <div className="min-vh-100" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+      <Msg msg={msg} setMsg={setMsg} />
       <div className="container py-5">
         {/* Header */}
         <div className="text-center mb-5 mt-4">
@@ -45,18 +48,6 @@ export default function CurrentOwnerProfile() {
           <h1 className="text-white fw-bold mb-2">My Profile</h1>
           <p className="text-white opacity-75">Manage your account information</p>
         </div>
-
-        {/* Error Message */}
-        {msg && (
-          <div className="row justify-content-center mb-4">
-            <div className="col-md-8 col-lg-6">
-              <div className="alert alert-danger border-0 rounded-3 shadow-sm" role="alert">
-                <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                {msg}
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Profile Card */}
         <div className="row justify-content-center">

@@ -1,165 +1,119 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../init/instance.js";
+import { createToast } from "../utils/toast.js";
 
-export default function MyNavbar({ isLoggedIn, setMsg , userRole}) {
+const navLinkClass =
+  "rounded-xl px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-sky-50 hover:text-sky-700";
+
+export default function MyNavbar({ isLoggedIn, setMsg, userRole }) {
   const [owner, setOwner] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const currentOwner = async () => {
-    try {
-      const res = await api.get("/auth/me");
-      setOwner(res.data);
-    } catch (e) {
-      if ([401, 402, 403].includes(e.response.status)) setMsg(e.response.data);
-      console.log(e.response.data.message);
-    }
-  };
 
   useEffect(() => {
-    if (isLoggedIn) currentOwner();
-    // console.log("isLoggedIn value navbar: ", isLoggedIn);
-  }, [isLoggedIn]);
+    const currentOwner = async () => {
+      try {
+        const res = await api.get("/auth/me");
+        setOwner(res.data);
+      } catch (e) {
+        if ([401, 402, 403].includes(e?.response?.status)) {
+          setMsg(createToast(e.response.data, "error"));
+        }
+      }
+    };
+
+    if (isLoggedIn) {
+      currentOwner();
+    }
+  }, [isLoggedIn, setMsg]);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [isLoggedIn, userRole]);
+
   return (
-    <nav className="navbar navbar-expand-lg shadow-lg sticky-top" style={{background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,248,255,0.95) 100%)', backdropFilter: 'blur(10px)', zIndex: '1020'}}>
-      <div className="container-fluid px-4">
-        {/* Logo/Brand */}
-        <Link className="navbar-brand d-flex align-items-center gap-2" to="/" style={{textDecoration: 'none'}}>
-          <div className="d-flex align-items-center justify-content-center rounded-3" style={{width: '40px', height: '40px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
-            <span className="text-white fw-bold">T</span>
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur">
+      <nav className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <Link to="/" className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-sm font-bold text-white">
+            T
           </div>
-          <span className="fw-bold fs-4" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>TenantApp</span>
+          <div>
+            <p className="text-lg font-bold tracking-[-0.02em] text-slate-950">TenantApp</p>
+            <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+              workspace platform
+            </p>
+          </div>
         </Link>
 
-        {/* Mobile Toggle Button */}
-        <button 
-          className="navbar-toggler border-0 p-2 d-lg-none" 
-          type="button" 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          style={{boxShadow: 'none'}}
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 lg:hidden"
+          onClick={() => setIsMobileMenuOpen((open) => !open)}
+          aria-label="Toggle navigation"
+          aria-expanded={isMobileMenuOpen}
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="text-lg">{isMobileMenuOpen ? "x" : "="}</span>
         </button>
 
-        {/* Navigation Menu */}
-        <div className={`navbar-collapse ${isMobileMenuOpen ? 'd-block' : 'd-none'} d-lg-block`} id="navbarNav" style={{transition: 'all 0.3s ease'}}>
-          <ul className="navbar-nav me-auto align-items-lg-center gap-2 flex-lg-row">
-            {isLoggedIn && (
+        <div
+          className={`w-full items-center justify-between gap-3 lg:flex lg:w-auto ${
+            isMobileMenuOpen ? "flex" : "hidden"
+          }`}
+        >
+          <div className="flex w-full flex-col gap-2 lg:w-auto lg:flex-row lg:items-center">
+            {isLoggedIn && userRole === "admin" ? (
+              <Link to="/admin/dashboard" className={navLinkClass}>
+                Dashboard
+              </Link>
+            ) : null}
+
+            {isLoggedIn && userRole === "user" ? (
+              <Link to="/notes" className={navLinkClass}>
+                Dashboard
+              </Link>
+            ) : null}
+
+            {isLoggedIn ? (
+              <Link to={`/users/${owner?._id}`} className={navLinkClass}>
+                Profile
+              </Link>
+            ) : (
               <>
-                {userRole === "admin" && (
-                  <li className="nav-item">
-                    <Link 
-                      className="nav-link px-3 py-2 rounded-3 fw-medium d-flex align-items-center gap-2 text-dark"
-                      to="/admin/dashboard"
-                      style={{transition: 'all 0.3s ease', textDecoration: 'none'}}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = 'rgba(13, 110, 253, 0.1)';
-                        e.target.style.color = '#0d6efd';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = 'transparent';
-                        e.target.style.color = '#212529';
-                      }}
-                    >
-                      <span>📊</span>
-                      <span>Dashboard</span>
-                    </Link>
-                  </li>
-                )}
-                {userRole === "user" && (
-                  <li className="nav-item">
-                    <Link 
-                      className="nav-link px-3 py-2 rounded-3 fw-medium d-flex align-items-center gap-2 text-dark"
-                      to="/notes"
-                      style={{transition: 'all 0.3s ease', textDecoration: 'none'}}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = 'rgba(13, 110, 253, 0.1)';
-                        e.target.style.color = '#0d6efd';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = 'transparent';
-                        e.target.style.color = '#212529';
-                      }}
-                    >
-                      <span>📊</span>
-                      <span>Dashboard</span>
-                    </Link>
-                  </li>
-                )}
-                <li className="nav-item">
-                  <Link 
-                    className="nav-link px-3 py-2 rounded-3 fw-medium d-flex align-items-center gap-2 text-dark"
-                    to={`/users/${owner?._id}`}
-                    style={{transition: 'all 0.3s ease', textDecoration: 'none'}}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = 'rgba(13, 110, 253, 0.1)';
-                      e.target.style.color = '#0d6efd';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = 'transparent';
-                      e.target.style.color = '#212529';
-                    }}
-                  >
-                    <span>👤</span>
-                    <span>Profile</span>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link 
-                    className="btn btn-danger d-flex align-items-center gap-2 px-3 py-2 rounded-3 fw-medium text-white"
-                    to="/logout"
-                    style={{transition: 'all 0.3s ease', transform: 'scale(1)', textDecoration: 'none'}}
-                    onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-                    onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-                  >
-                    <span>🚪</span>
-                    <span>Logout</span>
-                  </Link>
-                </li>
+                <Link to="/auth" className={navLinkClass}>
+                  Features
+                </Link>
+                <Link to="/health" className={navLinkClass}>
+                  Health
+                </Link>
               </>
             )}
-            {!isLoggedIn && (
+          </div>
+
+          <div className="flex w-full flex-col gap-2 lg:w-auto lg:flex-row lg:items-center">
+            {isLoggedIn ? (
+              <Link
+                to="/logout"
+                className="inline-flex items-center justify-center rounded-xl bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600"
+              >
+                Logout
+              </Link>
+            ) : (
               <>
-                <li className="nav-item">
-                  <Link 
-                    className="nav-link px-3 py-2 rounded-3 fw-medium d-flex align-items-center gap-2 text-dark"
-                    to="/auth"
-                    style={{transition: 'all 0.3s ease', textDecoration: 'none'}}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = 'rgba(13, 110, 253, 0.1)';
-                      e.target.style.color = '#0d6efd';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = 'transparent';
-                      e.target.style.color = '#212529';
-                    }}
-                  >
-                    <span>📝</span>
-                    <span>Sign Up</span>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link 
-                    className="btn d-flex align-items-center gap-2 px-3 py-2 rounded-3 fw-medium text-white"
-                    to="/auth"
-                    style={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      transition: 'all 0.3s ease',
-                      transform: 'scale(1)',
-                      border: 'none',
-                      textDecoration: 'none'
-                    }}
-                    onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-                    onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-                  >
-                    <span>🔐</span>
-                    <span>Login</span>
-                  </Link>
-                </li>
+                <Link to="/auth" className={navLinkClass}>
+                  Sign up
+                </Link>
+                <Link
+                  to="/auth"
+                  className="inline-flex items-center justify-center rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                  Login
+                </Link>
               </>
             )}
-          </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }

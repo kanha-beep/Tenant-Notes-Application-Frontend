@@ -4,6 +4,7 @@ import api from "../init/instance.js";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
 import SingleUsersCards from "./UsersCards/SingleUsersCards.jsx";
 import { useNavigate, useParams } from "react-router-dom";
+import { createToast } from "../utils/toast.js";
 export default function SingleUsers() {
   const userRole = localStorage.getItem("role");
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function SingleUsers() {
         setUsers(res.data);
       } catch (e) {
         console.log("error Notes: ", e.response.data.message);
-        setMsg(e.response.data.message);
+        setMsg(createToast(e.response.data.message));
       }
     };
     getOneUser();
@@ -66,7 +67,7 @@ export default function SingleUsers() {
         <h2 className="text-center">Single User</h2>
       )}
       <div className="col-10 col-md-10 col-lg-10 bg-dark">
-        <Msg msg={msg} />
+        <Msg msg={msg} setMsg={setMsg} />
         {/* admin + users */}
         {userRole === "admin" && toShowAdmin === "users" && (
           <SingleUsersCards

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../init/instance.js";
-// import jwt from "jsonwebtoken";
+import { createToast } from "../utils/toast.js";
+import { cn, uiTokens } from "../utils/uiTokens.js";
 
 export default function Auth({ setIsLoggedIn, setMsg, msg }) {
-  const [loading, setLoading] = useState(false);
   const [isPage, setIsPage] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const [userForm, setUserForm] = useState({
     username: "",
@@ -18,289 +19,197 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
   const url = isPage ? "login" : "register";
 
   const handleChange = (e) => {
-    let { name, value } = e.target;
-    if (name !== "password") {
-      value = value.trim().toLowerCase();
-    }
-    setUserForm((p) => ({ ...p, [name]: value }));
+    setUserForm((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
 
   const handleSubmitAuth = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     if (!isPage) {
       try {
-        console.log("url signup: ", url);
-        setLoading(true);
         const res = await api.post(`/auth/${url}`, userForm);
         console.log("Sign up done: ", res.data.data);
+        setMsg(
+          createToast(
+            "Account created successfully. Please log in.",
+            "success",
+          ),
+        );
         setIsPage(true);
-        setLoading(false);
       } catch (e) {
-        if ([401, 402, 403].includes(e.response.status))
-          setMsg(e.response.data?.message);
-        console.log(e.response.data);
-        alert(e?.response?.data?.message);
-        setLoading(false);
+        if ([401, 402, 403].includes(e?.response?.status)) {
+          setMsg(createToast(e.response.data?.message, "error"));
+        }
+      } finally {
+        setIsSubmitting(false);
       }
-    } else {
-      try {
-        console.log("url login: ", url);
-        console.log("form: ", userForm);
-        const res = await api.post(`/auth/${url}`, userForm);
-        const token = res.data.token;
-        console.log("token", token);
-        const role = res.data.role;
-        localStorage.setItem("tokens", token);
-        localStorage.setItem("tenant", userForm.tenant);
-        localStorage.setItem("role", role);
-        localStorage.setItem("userId: ", res?.data?._id);
-        console.log("login done");
-        setLoading(true);
-        setIsLoggedIn(true);
-        console.log("role got", role);
-        if (role === "admin") navigate("/admin/dashboard");
-        else navigate("/notes");
-      } catch (e) {
-        if ([401, 402, 403].includes(e.response?.status))
-          setMsg(e.response?.data?.message);
-        setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await api.post(`/auth/${url}`, userForm);
+      const token = res.data.token;
+      const role = res.data.role;
+      localStorage.setItem("tokens", token);
+      localStorage.setItem("tenant", userForm.tenant);
+      localStorage.setItem("role", role);
+      localStorage.setItem("userId: ", res?.data?._id);
+      setIsLoggedIn(true);
+      setMsg(createToast("Logged in successfully.", "success"));
+      if (role === "admin") navigate("/admin/dashboard");
+      else navigate("/notes");
+    } catch (e) {
+      if ([401, 402, 403].includes(e?.response?.status)) {
+        setMsg(createToast(e.response?.data?.message, "error"));
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
   console.log("error msg in Auth: ", msg);
 
-  // Show error message if exists
-  if (msg) {
-    setTimeout(() => setMsg(""), 5000);
-  }
   return (
-    <div
-      className="min-vh-100 d-flex justify-content-center align-items-center"
-      style={{
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      }}
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex justify-center">
-          <div className="w-full md:w-2/3 lg:w-2/5">
-            <div
-              className="bg-white/95 backdrop-blur-lg shadow-lg border-0 rounded-2xl"
-              style={{ backdropFilter: "blur(10px)" }}
-            >
-              <div className="p-8">
-                {/* Logo/Brand */}
-                <div className="text-center mb-6">
-                  <div
-                    className="inline-flex items-center justify-center rounded-lg mb-3 w-15 h-15"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                    }}
-                  >
-                    <span className="text-white font-bold text-3xl">T</span>
-                  </div>
-                  <h2 className="font-bold text-2xl bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-                    TenantApp
-                  </h2>
-                  <p className="text-gray-500">
-                    Welcome back! Please sign in to your account
-                  </p>
-                </div>
+    <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-[linear-gradient(180deg,#f8fbff_0%,#eef5ff_52%,#f8fbff_100%)] px-4 py-8 text-slate-900 shadow-[0_24px_70px_rgba(148,163,184,0.18)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_30%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.10),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.10),transparent_24%)]" />
+      <div className="absolute left-8 top-10 h-36 w-36 rounded-full bg-sky-200/50 blur-3xl" />
+      <div className="absolute right-8 top-20 h-40 w-40 rounded-full bg-violet-200/45 blur-3xl" />
+      <div className="absolute bottom-6 left-1/3 h-32 w-32 rounded-full bg-emerald-200/40 blur-3xl" />
 
-                {/* Toggle Buttons */}
-                <div className="flex mb-6 p-1 rounded-lg bg-gray-100">
-                  <button
-                    className={`flex-1 rounded-lg font-medium transition-all duration-300 py-2 ${
-                      !isPage
-                        ? "text-white shadow-sm bg-gradient-to-r from-indigo-500 to-purple-600"
-                        : "text-gray-800 bg-transparent"
-                    }`}
-                    style={{ border: "none" }}
-                    onClick={() => setIsPage(false)}
-                  >
-                    Sign Up
-                  </button>
-                  <button
-                    className={`flex-1 rounded-lg font-medium transition-all duration-300 py-2 ${
-                      isPage
-                        ? "text-white shadow-sm bg-gradient-to-r from-indigo-500 to-purple-600"
-                        : "text-gray-800 bg-transparent"
-                    }`}
-                    style={{ border: "none" }}
-                    onClick={() => setIsPage(true)}
-                  >
-                    Login
-                  </button>
-                </div>
+      <div className="relative mx-auto flex min-h-[72vh] max-w-5xl items-center justify-center">
+        <section className={uiTokens.panel}>
+          <div className="text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-600 to-cyan-500 text-2xl font-black text-white shadow-[0_12px_30px_rgba(14,165,233,0.28)]">
+              T
+            </div>
+            <p className="mt-4 text-sm font-semibold uppercase tracking-[0.24em] text-sky-700">
+              TenantApp
+            </p>
+            <h2 className="mt-2 text-3xl font-black text-slate-900 sm:text-4xl">
+              {isPage ? "Welcome back" : "Create your account"}
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
+              {isPage
+                ? "Sign in to continue to your workspace."
+                : "Register your account with the tenant and role details below."}
+            </p>
+          </div>
 
-                {/* Error Message */}
-                {msg && (
-                  <div
-                    className="alert border-0 rounded-3 shadow-sm mb-4"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)",
-                      color: "white",
-                    }}
-                  >
-                    <div className="d-flex align-items-center">
-                      <span className="me-2">⚠️</span>
-                      <span>{msg}</span>
-                    </div>
-                  </div>
+          <div className="mt-6 rounded-2xl bg-slate-100 p-1.5">
+            <div className="grid grid-cols-2 gap-1">
+              <button
+                type="button"
+                className={cn(
+                  uiTokens.buttonBase,
+                  isPage ? uiTokens.buttonAccent : uiTokens.buttonGhost,
+                  "rounded-2xl px-4 py-3",
                 )}
-
-                {/* Form */}
-                <form onSubmit={handleSubmitAuth}>
-                  <div className="mb-3">
-                    <label className="form-label fw-medium text-dark">
-                      📧 Email
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control form-control-lg rounded-3 border-0 shadow-sm"
-                      placeholder="Enter your email"
-                      name="email"
-                      value={userForm.email}
-                      onChange={handleChange}
-                      style={{
-                        background: "#f8f9fa",
-                        transition: "all 0.3s ease",
-                      }}
-                      onFocus={(e) =>
-                        (e.target.style.boxShadow =
-                          "0 0 0 3px rgba(102, 126, 234, 0.1)")
-                      }
-                      onBlur={(e) => (e.target.style.boxShadow = "none")}
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label fw-medium text-dark">
-                      🔒 Password
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control form-control-lg rounded-3 border-0 shadow-sm"
-                      placeholder="Enter your password"
-                      name="password"
-                      value={userForm.password}
-                      onChange={handleChange}
-                      style={{
-                        background: "#f8f9fa",
-                        transition: "all 0.3s ease",
-                      }}
-                      onFocus={(e) =>
-                        (e.target.style.boxShadow =
-                          "0 0 0 3px rgba(102, 126, 234, 0.1)")
-                      }
-                      onBlur={(e) => (e.target.style.boxShadow = "none")}
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label fw-medium text-dark">
-                      🏢 Tenant
-                    </label>
-                    <select
-                      name="tenant"
-                      value={userForm.tenant}
-                      onChange={handleChange}
-                      className="form-select form-select-lg rounded-3 border-0 shadow-sm"
-                      style={{
-                        background: "#f8f9fa",
-                        transition: "all 0.3s ease",
-                      }}
-                      onFocus={(e) =>
-                        (e.target.style.boxShadow =
-                          "0 0 0 3px rgba(102, 126, 234, 0.1)")
-                      }
-                      onBlur={(e) => (e.target.style.boxShadow = "none")}
-                    >
-                      <option value="" disabled>
-                        Select tenant
-                      </option>
-                      <option value="acme">Acme</option>
-                      <option value="efgh">EFGH</option>
-                    </select>
-                  </div>
-
-                  {!isPage && (
-                    <>
-                      <div className="mb-3">
-                        <label className="form-label fw-medium text-dark">
-                          👤 Username
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control form-control-lg rounded-3 border-0 shadow-sm"
-                          placeholder="Enter your username"
-                          name="username"
-                          value={userForm.username}
-                          onChange={handleChange}
-                          style={{
-                            background: "#f8f9fa",
-                            transition: "all 0.3s ease",
-                          }}
-                          onFocus={(e) =>
-                            (e.target.style.boxShadow =
-                              "0 0 0 3px rgba(102, 126, 234, 0.1)")
-                          }
-                          onBlur={(e) => (e.target.style.boxShadow = "none")}
-                        />
-                      </div>
-
-                      {/* <div className="mb-3">
-                        <label className="form-label fw-medium text-dark">⚡ Role</label>
-                        <select
-                          name="role"
-                          value={userForm.role}
-                          onChange={handleChange}
-                          className="form-select form-select-lg rounded-3 border-0 shadow-sm"
-                          style={{background: '#f8f9fa', transition: 'all 0.3s ease'}}
-                          onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)'}
-                          onBlur={(e) => e.target.style.boxShadow = 'none'}
-                        >
-                          <option value="" disabled>Select Role</option>
-                          <option value="user">User</option>
-                          <option value="admin">Admin</option>
-                        </select>
-                      </div> */}
-                    </>
-                  )}
-
-                  <button
-                    type="submit"
-                    className="btn btn-lg w-100 rounded-3 fw-medium text-white border-0 shadow-sm"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                      transition: "all 0.3s ease",
-                      transform: "scale(1)",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.target.style.transform = "scale(1.02)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.target.style.transform = "scale(1)")
-                    }
-                  >
-                    {loading ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm" />
-                        Processing...
-                      </>
-                    ) : isPage ? (
-                      "🚀 Login"
-                    ) : (
-                      "✨ Sign Up"
-                    )}
-                  </button>
-                </form>
-              </div>
+                onClick={() => setIsPage(true)}
+                disabled={isSubmitting}
+              >
+                Login
+              </button>
+              <button
+                type="button"
+                className={cn(
+                  uiTokens.buttonBase,
+                  !isPage ? uiTokens.buttonAccent : uiTokens.buttonGhost,
+                  "rounded-2xl px-4 py-3",
+                )}
+                onClick={() => setIsPage(false)}
+                disabled={isSubmitting}
+              >
+                Sign Up
+              </button>
             </div>
           </div>
-        </div>
+
+          <form onSubmit={handleSubmitAuth} className="mt-6 space-y-4">
+            <div className="grid gap-4 md:grid-cols-3">
+              <label className="block">
+                <span className={uiTokens.label}>Email</span>
+                <input
+                  type="text"
+                  className={uiTokens.input}
+                  placeholder="Enter your email"
+                  name="email"
+                  value={userForm.email}
+                  onChange={handleChange}
+                />
+              </label>
+
+              <label className="block">
+                <span className={uiTokens.label}>Password</span>
+                <input
+                  type="password"
+                  className={uiTokens.input}
+                  placeholder="Enter your password"
+                  name="password"
+                  value={userForm.password}
+                  onChange={handleChange}
+                />
+              </label>
+
+              <label className="block">
+                <span className={uiTokens.label}>Tenant</span>
+                <select
+                  name="tenant"
+                  value={userForm.tenant}
+                  onChange={handleChange}
+                  className={uiTokens.input}
+                >
+                  <option value="" disabled>
+                    Select
+                  </option>
+                  <option value="acme">Acme</option>
+                  <option value="globex">Globex</option>
+                </select>
+              </label>
+            </div>
+
+            {!isPage && (
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="block">
+                  <span className={uiTokens.label}>Username</span>
+                  <input
+                    type="text"
+                    className={uiTokens.input}
+                    placeholder="Enter your username"
+                    name="username"
+                    value={userForm.username}
+                    onChange={handleChange}
+                  />
+                </label>
+
+                {/* <label className="block">
+                  <span className={uiTokens.label}>Role</span>
+                  <select
+                    name="role"
+                    value={userForm.role}
+                    onChange={handleChange}
+                    className={uiTokens.input}
+                  >
+                    <option value="" disabled>
+                      Select Role
+                    </option>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </label> */}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className={cn(uiTokens.buttonBase, uiTokens.buttonAccent, "w-full py-3.5")}
+              disabled={isSubmitting}
+            >
+              <span className="inline-flex h-2.5 w-2.5 rounded-full bg-white/85" />
+              {isSubmitting ? (isPage ? "Logging in..." : "Creating account...") : isPage ? "Login" : "Sign Up"}
+            </button>
+          </form>
+        </section>
       </div>
     </div>
   );

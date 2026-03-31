@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../init/instance.js";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";
+import Msg from "../Components/AlertBoxes/Msg.jsx";
+import { createToast, flashToast } from "../utils/toast.js";
 export default function EditNotes() {
   const { noteId } = useParams(); // Get note ID from URL
   const navigate = useNavigate();
@@ -13,13 +15,13 @@ export default function EditNotes() {
   useEffect(() => {
     const fetchNote = async () => {
       try {
-        const res = await api.get(`/notes/${noteId}/edit`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setData(res.data);
-      } catch (e) {
-        setMsg(e.response?.data?.message || "Error fetching note");
-      }
+      const res = await api.get(`/notes/${noteId}/edit`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setData(res.data);
+    } catch (e) {
+      setMsg(createToast(e.response?.data?.message || "Error fetching note"));
+    }
     };
     fetchNote();
   }, [noteId, token]);
@@ -35,27 +37,19 @@ export default function EditNotes() {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Edited Note: ", res.data);
+      flashToast("Note updated successfully.", "success");
       navigate(`/notes/${noteId}`); // Redirect to notes page
     } catch (e) {
-      setMsg(e.response?.data?.message || "Error updating note");
+      setMsg(createToast(e.response?.data?.message || "Error updating note"));
     }
   };
 
   return (
     <div className="container-fluid">
+      <Msg msg={msg} setMsg={setMsg} />
       <div className="row justify-content-center">
         <div className="col-12">
           <h1 className="text-center py-4">Edit Note</h1>
-        </div>
-      </div>
-      {/* msg */}
-      <div className="row justify-content-center">
-        <div className="col-12 col-md-8 col-lg-6">
-          {msg && (
-            <div className="alert alert-danger" role="alert">
-              {msg}
-            </div>
-          )}
         </div>
       </div>
       {/* edit form */}

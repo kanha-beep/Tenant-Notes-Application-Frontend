@@ -4,6 +4,8 @@ import api from "../../init/instance.js";
 import PlanButton from "../../Components/Buttons/PlanButton.jsx";
 import CreateButton from "../../Components/Buttons/CreateButton.jsx";
 import HomePageButton from "../../Components/Buttons/HomePageButton.jsx";
+import Msg from "../../Components/AlertBoxes/Msg.jsx";
+import { createToast, flashToast } from "../../utils/toast.js";
 
 export default function NewUsersCards() {
   const userRole = localStorage.getItem("role");
@@ -32,26 +34,17 @@ export default function NewUsersCards() {
         },
       });
       console.log("User created successfully:", res.data);
+      flashToast("User created successfully.", "success");
       navigate("/admin/users");
     } catch (error) {
       console.error("Error response:", error.response?.data);
-      setMsg(error.response?.data?.message || "Failed to create user");
+      setMsg(createToast(error.response?.data?.message || "Failed to create user"));
     }
   };
   return (
     <div className="container">
+      <Msg msg={msg} setMsg={setMsg} action={<PlanButton />} />
       <h1 className="text-center"> Add Users Here by Admin </h1>
-      <div className="row">
-        {msg !== "" && (
-          <div
-            className="alert alert-danger col-12 col-lg-6 col-sm-8"
-            role="alert"
-          >
-            {msg} &nbsp;&nbsp;&nbsp;
-            <PlanButton />
-          </div>
-        )}
-      </div>
       <div className="row justify-content-center">
         <form onSubmit={handleCreateUser} className="col-12 col-lg-6 col-md-8">
           <input

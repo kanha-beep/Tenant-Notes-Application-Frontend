@@ -1,11 +1,11 @@
 import Tenant from "../../../server/Extra/NotesModels/TenantSchema.js"
 
 const tenantData = [{
-    name: "Acme",
+    name: "acme",
     plan: "free",
     noteLimit: 3,
 }, {
-    name: "EFGH",
+    name: "efgh",
     plan: "free",
     noteLimit: 3,
 }]

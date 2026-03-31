@@ -1,5 +1,6 @@
-import React from "react";
 import api from "../../init/instance.js";
+import { cn, uiTokens } from "../../utils/uiTokens.js";
+
 export default function DeleteButton({
   token,
   n,
@@ -7,9 +8,7 @@ export default function DeleteButton({
   userRole,
   toShowAdmin,
 }) {
-  // console.log("noteId:", n?._id, toShowAdmin);
   const handleDelete = async (id) => {
-    // admin + users
     if (userRole === "admin" && toShowAdmin === "users") {
       await api.delete(`/admin/users/${id}`, {
         headers: {
@@ -18,7 +17,7 @@ export default function DeleteButton({
       });
       navigate("/admin/users");
     }
-    // admin + notes
+
     if (userRole === "admin" && toShowAdmin === "notes") {
       await api.delete(`/notes/${id}`, {
         headers: {
@@ -27,7 +26,7 @@ export default function DeleteButton({
       });
       navigate("/notes");
     }
-    //notes
+
     if (userRole === "admin") {
       await api.delete(`/notes/${id}`, {
         headers: {
@@ -37,14 +36,15 @@ export default function DeleteButton({
       navigate("/notes");
     }
   };
+
   return (
     <div>
       {userRole === "admin" && (
         <button
-          className="btn btn-danger d-flex align-items-center gap-2 px-3 py-2 fw-medium rounded-2 shadow-sm"
+          className={cn(uiTokens.buttonBase, uiTokens.buttonDanger, "px-3 py-2")}
           onClick={() => handleDelete(n?._id)}
         >
-          <span>🗑️</span>
+          Delete
         </button>
       )}
     </div>

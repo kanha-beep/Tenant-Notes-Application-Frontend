@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 //notes
@@ -19,6 +19,7 @@ import api from "./init/instance.js";
 import Home from "./Components/Home.jsx";
 import Dashboard from "./AdminPages/Dashboard/Dashboard.jsx";
 import Msg from "./Components/AlertBoxes/Msg.jsx";
+import { consumeFlashToast, createToast } from "./utils/toast.js";
 //user
 import EditUsersProfile from "./UsersPages/EditUsersProfile.jsx";
 import CurrentOwnerProfile from "./UsersPages/CurrentOwnerProfile.jsx";
@@ -29,6 +30,7 @@ import NewUsers from "./UsersPages/NewUsers.jsx";
 
 function App() {
   const [msg, setMsg] = useState("");
+  const location = useLocation();
   const [isPage, setIsPage] = useState(true);
   const [userRole, setUserRole] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -57,11 +59,19 @@ function App() {
     };
     validateToken();
   }, [token]);
+
+  useEffect(() => {
+    const flashMessage = consumeFlashToast();
+    if (flashMessage) {
+      setMsg(createToast(flashMessage, flashMessage.type));
+    }
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen">
       <MyNavbar isLoggedIn={isLoggedIn} msg={msg} setMsg={setMsg} userRole={userRole}/>
       <Msg msg={msg} setMsg={setMsg} />
-      <div className="container mx-auto px-4 py-6">
+      <div className="mx-auto py-2 px-3">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/health" element={<Health />} />

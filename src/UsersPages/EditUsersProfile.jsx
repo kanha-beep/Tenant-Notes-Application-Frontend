@@ -3,6 +3,8 @@ import api from "../init/instance.js";
 import { useNavigate, useParams } from "react-router-dom";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";
 import BackToProfileButton from "../Components/Buttons/BackToProfileButton.jsx"
+import Msg from "../Components/AlertBoxes/Msg.jsx";
+import { createToast, flashToast } from "../utils/toast.js";
 export default function EditUsersProfile() {
   // const [owner, setOwner] = useState({});
   const { userId } = useParams(); // Get note ID from URL
@@ -42,25 +44,19 @@ export default function EditUsersProfile() {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Edited User: ", res.data);
+      flashToast("Profile updated successfully.", "success");
       navigate(`/users/${userId}`); // Redirect to notes page
     } catch (e) {
-      setMsg(e.response?.data || "Error updating note");
-      if (e.response.status === 404) return setMsg(e.response.data.message);
+      setMsg(createToast(e.response?.data || "Error updating note"));
+      if (e.response.status === 404) {
+        return setMsg(createToast(e.response.data.message));
+      }
     }
   };
   return (
     <div className="container">
+      <Msg msg={msg} setMsg={setMsg} />
       <h1 className="text-center">Edit Profile</h1>
-      <div className="row">
-        {msg && (
-          <div
-            className="alert alert-danger col-12 col-lg-6 col-md-8"
-            role="alert"
-          >
-            {msg}
-          </div>
-        )}
-      </div>
       <div className="row mx-auto">
         <form
           onSubmit={handleEditUser}

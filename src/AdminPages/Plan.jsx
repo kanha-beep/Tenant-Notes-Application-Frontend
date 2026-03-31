@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Plan.css";
 import api from "../init/instance.js";
+import Msg from "../Components/AlertBoxes/Msg.jsx";
+import { createToast } from "../utils/toast.js";
 
 export default function Plan() {
   const [userRole, setUserRole] = useState("");
@@ -20,13 +22,13 @@ export default function Plan() {
       });
       console.log("about tenant", res.data);
       if (res.data === "paid") {
-        setMsg("Already a Premium User");
+        setMsg(createToast("Already a Premium User", "success"));
         setIsAlreadyPaid(true);
       }
     } catch (e) {
       console.log("error plan", e.response.data.message);
       setUserRole(e.response.data.user);
-      setRoleMsg(e.response.data.message);
+      setRoleMsg(createToast(e.response.data.message));
     }
   };
   const handleChange = (e) => {
@@ -36,7 +38,7 @@ export default function Plan() {
     try {
       e.preventDefault();
       if (!data.amount || data.amount !== "100") {
-        setMsg("Enter Correct Amount as Show on the screen");
+        setMsg(createToast("Enter Correct Amount as Show on the screen"));
         return;
       }
       console.log("plan ready", data); //
@@ -56,23 +58,9 @@ export default function Plan() {
   }, [token]);
   return (
     <div>
+      <Msg msg={msg} setMsg={setMsg} />
+      <Msg msg={roleMsg} setMsg={setRoleMsg} />
       <h1> Buy Plan </h1>
-      {msg !== "" && (
-        <div
-          className={`alert alert-danger ${msg !== "" ? "show" : ""}`}
-          role="alert"
-        >
-          {msg}
-        </div>
-      )}
-      {roleMsg !== "" && (
-        <div
-          className={`alert alert-danger ${msg !== "" ? "show" : ""}`}
-          role="alert"
-        >
-          {roleMsg}
-        </div>
-      )}
       {!isAlreadyPaid && (
         <div>
           <form onSubmit={handleBuyPlan}>

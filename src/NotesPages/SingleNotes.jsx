@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../init/instance.js";
 import SingleNotesCards from "./NotesCards/SingleNotesCards.jsx";
+import Msg from "../Components/AlertBoxes/Msg.jsx";
+import { createToast } from "../utils/toast.js";
 
 export default function Notes() {
   const [msg, setMsg] = useState("");
@@ -24,7 +26,7 @@ export default function Notes() {
         setNotes(res.data);
       } catch (e) {
         console.log("error Notes 1: ", e.response.data.message);
-        setMsg(e.response.data.message);
+        setMsg(createToast(e.response.data.message));
       }
     };
     getOneNotes();
@@ -47,16 +49,7 @@ export default function Notes() {
 
   return (
     <div className="container-fluid">
-      {/* msg */}
-      <div className="row justify-content-center">
-        <div className="col-12 col-md-10 col-lg-8">
-          {msg !== "" && (
-            <div className="alert alert-danger" role="alert">
-              {msg}
-            </div>
-          )}
-        </div>
-      </div>
+      <Msg msg={msg} setMsg={setMsg} />
       {/* notes show details */}
       <div className="row justify-content-center">
         <div className="col-12 col-sm-10 col-md-8 col-lg-6">

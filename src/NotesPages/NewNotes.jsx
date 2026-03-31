@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../init/instance.js";
 import HomePageButton from "../Components/Buttons/HomePageButton.jsx";
+import Msg from "../Components/AlertBoxes/Msg.jsx";
+import { createToast, flashToast } from "../utils/toast.js";
 
 export default function NewNotes() {
   const userRole = localStorage.getItem("role");
@@ -23,33 +25,19 @@ export default function NewNotes() {
         },
       });
       console.log("NewNotes: ........", res.data);
+      flashToast("Note created successfully.", "success");
       navigate("/notes");
     } catch (e) {
       console.log("error NewNotes F:", e.response?.data);
-      setMsg(e.response?.data?.message || "Failed to create note");
+      setMsg(createToast(e.response?.data?.message || "Failed to create note"));
     }
   };
   return (
     <div className="container-fluid">
+      <Msg msg={msg} setMsg={setMsg} />
       <div className="row justify-content-center">
         <div className="col-12">
           <h1 className="text-center py-4">Add Note Here By User</h1>
-        </div>
-      </div>
-      {/* msg */}
-      <div className="row justify-content-center">
-        <div className="col-12 col-md-8 col-lg-6">
-          {msg !== "" && (
-            <div className="alert alert-danger" role="alert">
-              {msg}
-              <button
-                className="btn btn-sm btn-warning ms-3"
-                onClick={() => navigate("/admin/plan")}
-              >
-                Plan Buy
-              </button>
-            </div>
-          )}
         </div>
       </div>
       {/* new note form */}

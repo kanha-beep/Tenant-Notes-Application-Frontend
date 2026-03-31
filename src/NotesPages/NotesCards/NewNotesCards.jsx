@@ -4,6 +4,8 @@ import api from "../../init/instance.js";
 import PlanButton from "../../Components/Buttons/PlanButton.jsx";
 import CreateButton from "../../Components/Buttons/CreateButton.jsx";
 import HomePageButton from "../../Components/Buttons/HomePageButton.jsx";
+import Msg from "../../Components/AlertBoxes/Msg.jsx";
+import { createToast, flashToast } from "../../utils/toast.js";
 
 export default function NewNotesCards() {
   const userRole = localStorage.getItem("role");
@@ -25,26 +27,17 @@ export default function NewNotesCards() {
         },
       });
       console.log("NewNotes: ", res.data);
+      flashToast("Note created successfully.", "success");
       navigate("/notes");
     } catch (e) {
       console.log("error NewNotes F:", typeof e.response.data);
-      setMsg(e.response.data);
+      setMsg(createToast(e.response.data));
     }
   };
   return (
     <div className="container">
+      <Msg msg={msg} setMsg={setMsg} action={<PlanButton />} />
       <h1 className="text-center"> Add Notes Here by Admin </h1>
-      <div className="row">
-        {msg !== "" && (
-          <div
-            className="alert alert-danger col-12 col-lg-6 col-sm-8"
-            role="alert"
-          >
-            {msg} &nbsp;&nbsp;&nbsp;
-            <PlanButton />
-          </div>
-        )}
-      </div>
       <div className="row justify-content-center">
         <form onSubmit={handleCreateNote} className="col-12 col-lg-6 col-md-8">
           <input
