@@ -1,14 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
-//notes
+import { useEffect, useState } from "react";
 import AllNotesFinal from "./NotesPages/AllNotesFinal.jsx";
 import NewNotes from "./NotesPages/NewNotes.jsx";
 import EditNotes from "./NotesPages/EditNotes.jsx";
 import SingleNotes from "./NotesPages/SingleNotes.jsx";
-//auth
 import Auth from "./Auth/Auth.jsx";
 import Logout from "./Auth/Logout.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
@@ -21,7 +18,6 @@ import NotFound from "./Components/NotFound.jsx";
 import Dashboard from "./AdminPages/Dashboard/Dashboard.jsx";
 import Msg from "./Components/AlertBoxes/Msg.jsx";
 import { consumeFlashToast, createToast } from "./utils/toast.js";
-//user
 import EditUsersProfile from "./UsersPages/EditUsersProfile.jsx";
 import CurrentOwnerProfile from "./UsersPages/CurrentOwnerProfile.jsx";
 import AllUsersFinal from "./UsersPages/AllUsersFinal.jsx";
@@ -36,28 +32,28 @@ function App() {
   const [userRole, setUserRole] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const token = localStorage.getItem("tokens");
-  // get current owner if token available
+
   useEffect(() => {
     const validateToken = async () => {
       if (token) {
-        // ✅ Only run API call if token exists
         try {
-          const res = await api.get("/auth/me"); // ✅ cookies auto included
-          setIsLoggedIn(true); // ✅ mark user as logged in
+          const res = await api.get("/auth/me");
+          setIsLoggedIn(true);
           setIsPage(true);
-          setUserRole(res.data.role); // ✅ set role from backend
+          setUserRole(res.data.role);
         } catch (e) {
-          setIsLoggedIn(false); // ❌ token invalid/expired
+          setIsLoggedIn(false);
           setIsPage(false);
           setUserRole("");
           console.log("User not authenticated", e.response?.data?.message);
         }
       } else {
-        setIsLoggedIn(false); // ✅ no token, clear states
+        setIsLoggedIn(false);
         setIsPage(false);
         setUserRole("");
       }
     };
+
     validateToken();
   }, [token]);
 
@@ -70,55 +66,58 @@ function App() {
 
   return (
     <div className="min-h-screen">
-      <MyNavbar isLoggedIn={isLoggedIn} msg={msg} setMsg={setMsg} userRole={userRole}/>
+      <MyNavbar
+        isLoggedIn={isLoggedIn}
+        msg={msg}
+        setMsg={setMsg}
+        userRole={userRole}
+      />
       <Msg msg={msg} setMsg={setMsg} />
-      <div className="mx-auto py-2 px-3">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/health" element={<Health />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/users/:userId" element={<CurrentOwnerProfile />} />
-          <Route path="/users/:userId/edit" element={<EditUsersProfile />} />
-          //notes
+      <div className="mx-auto px-3 py-2">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/health" element={<Health />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/users/:userId" element={<CurrentOwnerProfile />} />
+            <Route path="/users/:userId/edit" element={<EditUsersProfile />} />
+            <Route
+              path="/notes"
+              element={<AllNotesFinal setIsPage={setIsPage} isPage={isPage} />}
+            />
+            <Route path="/notes/new" element={<NewNotes />} />
+            <Route path="/notes/:noteId" element={<SingleNotes />} />
+            <Route path="/notes/:noteId/edit" element={<EditNotes />} />
+            <Route path="/admin/users" element={<AllUsersFinal />} />
+            <Route path="/admin/users/new" element={<NewUsers />} />
+            <Route path="/admin/users/:userId" element={<SingleUsers />} />
+            <Route path="/admin/users/:userId/edit" element={<EditUsers />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                userRole === "" ? (
+                  <div>Loading...</div>
+                ) : userRole === "admin" ? (
+                  <Dashboard isLoggedIn={isLoggedIn} />
+                ) : (
+                  <Navigate to="/notes" />
+                )
+              }
+            />
+            <Route path="/admin/plan" element={<Plan />} />
+          </Route>
           <Route
-            path="/notes"
-            element={<AllNotesFinal setIsPage={setIsPage} isPage={isPage} />}
+            path="/auth"
+            element={<Auth setIsLoggedIn={setIsLoggedIn} setMsg={setMsg} msg={msg} />}
           />
-          <Route path="/notes/new" element={<NewNotes />} />
-          <Route path="/notes/:noteId" element={<SingleNotes />} />
-          <Route path="/notes/:noteId/edit" element={<EditNotes />} />
-          //admin
-          <Route path="/admin/users" element={<AllUsersFinal />} />
-          <Route path="/admin/users/new" element={<NewUsers />} />
-          <Route path="/admin/users/:userId" element={<SingleUsers />} />
-          <Route path="/admin/users/:userId/edit" element={<EditUsers />} />
           <Route
-            path="/admin/dashboard"
-            element={
-              userRole === "" ? (
-                <div>Loading...</div>
-              ) : userRole === "admin" ? (
-                <Dashboard isLoggedIn={isLoggedIn} />
-              ) : (
-                <Navigate to="/notes" />
-              )
-            }
+            path="/logout"
+            element={<Logout setIsLoggedIn={setIsLoggedIn} setIsPage={setIsPage} />}
           />
-          
-          <Route path="/admin/plan" element={<Plan />} />
-        </Route>
-        <Route
-          path="/auth"
-          element={
-            <Auth setIsLoggedIn={setIsLoggedIn} setMsg={setMsg} msg={msg} />
-          }
-        />
-        <Route`r`n          path="/logout"`r`n          element={`r`n            <Logout setIsLoggedIn={setIsLoggedIn} setIsPage={setIsPage} />`r`n          }`r`n        />`r`n        <Route path="*" element={<NotFound />} />`r`n      </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </div>
     </div>
   );
 }
 
 export default App;
-
-
