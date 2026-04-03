@@ -15,10 +15,16 @@ export default function SingleNotesCards({
   setCheck,
   check,
   noteId,
+  feedback,
+  setFeedback,
+  onSubmitTask,
+  isSaving,
 }) {
   const userRole = localStorage.getItem("role");
   const toShowAdmin = localStorage.getItem("toShowAdmin");
   const isOverdue = !n?.check && n?.dueAt && new Date(n.dueAt).getTime() < Date.now();
+  const showAdminTaskView = userRole === "admin" && toShowAdmin === "notes";
+  const showUserFeedbackForm = userRole === "user";
 
   return (
     <div className="d-flex justify-content-center p-4">
@@ -73,7 +79,56 @@ export default function SingleNotesCards({
               </p>
             </div>
           </div>
+          <div className="col-12 col-md-6">
+            <div className="bg-dark bg-opacity-10 rounded p-3">
+              <div className="fw-semibold mb-2">Created on</div>
+              <p className="mb-0">{formatDateTime(n?.createdAt)}</p>
+            </div>
+          </div>
+          {n?.userFeedback ? (
+            <div className="col-12">
+              <div className="bg-success bg-opacity-10 rounded p-3 border border-success-subtle">
+                <div className="fw-semibold text-success mb-2">User comment</div>
+                <p className="mb-2" style={{ whiteSpace: "pre-wrap" }}>{n.userFeedback}</p>
+                {n?.feedbackAt ? (
+                  <small className="text-muted">Shared at {formatDateTime(n.feedbackAt)}</small>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
         </div>
+
+        {showUserFeedbackForm ? (
+          <div className="bg-light rounded p-4 mb-4 border">
+            <h5 className="fw-semibold text-secondary mb-3">Reply to admin</h5>
+            <label className="form-label fw-medium">Optional comment for admin</label>
+            <textarea
+              className="form-control mb-3"
+              rows="4"
+              placeholder="Write feedback, blocker, or completion note here..."
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+            />
+            <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+              <label className="d-flex align-items-center gap-2 fw-medium m-0">
+                <Checkbox
+                  check={check}
+                  setCheck={setCheck}
+                  toShowAdmin={toShowAdmin}
+                />
+                <span>Mark this task as completed</span>
+              </label>
+              <button
+                type="button"
+                className="btn btn-primary"
+                disabled={isSaving}
+                onClick={onSubmitTask}
+              >
+                {isSaving ? "Saving..." : "Send update to admin"}
+              </button>
+            </div>
+          </div>
+        ) : null}
 
         <div className="d-flex align-items-center flex-wrap gap-2 pt-3">
           <DeleteButton
@@ -94,11 +149,26 @@ export default function SingleNotesCards({
             toShowAdmin={toShowAdmin}
             userRole={userRole}
           />
-          <Checkbox
-            check={check}
-            setCheck={setCheck}
-            toShowAdmin={toShowAdmin}
-          />
+          {showAdminTaskView ? (
+            <>
+              <label className="d-flex align-items-center gap-2 m-0">
+                <Checkbox
+                  check={check}
+                  setCheck={setCheck}
+                  toShowAdmin={toShowAdmin}
+                />
+                <span className="small text-muted">Completed</span>
+              </label>
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                disabled={isSaving}
+                onClick={onSubmitTask}
+              >
+                {isSaving ? "Saving..." : "Save status"}
+              </button>
+            </>
+          ) : null}
         </div>
       </div>
     </div>

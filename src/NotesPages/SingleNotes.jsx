@@ -13,8 +13,9 @@ export default function Notes() {
   const token = localStorage.getItem("tokens");
   const userRole = localStorage.getItem("role");
   const [notes, setNotes] = useState(null);
-  const [check, setCheck] = useState("");
-  const [isCheckTouched, setIsCheckTouched] = useState(false);
+  const [check, setCheck] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const getOneNotes = async () => {
@@ -36,27 +37,37 @@ export default function Notes() {
   useEffect(() => {
     if (notes) {
       setCheck(notes.check);
+      setFeedback(notes.userFeedback || "");
     }
   }, [notes]);
 
   const handleCheckChange = (nextValue) => {
-    setIsCheckTouched(true);
     setCheck(nextValue);
   };
 
-  useEffect(() => {
-    const updateCheck = async () => {
-      if (check === "" || !isCheckTouched) return;
-      const res = await api.patch(`/notes/${noteId}`, { check: check });
+  const handleSubmitTask = async () => {
+    try {
+      setIsSaving(true);
+      const res = await api.patch(`/notes/${noteId}`, {
+        check,
+        userFeedback: feedback,
+      });
       console.log("check: notes ", res.data);
+      setNotes(res.data);
 
       if (userRole === "user" && check) {
-        flashToast("Work completed successfully.", "success");
+        flashToast("Task completed and comment sent to admin.", "success");
         navigate("/notes");
+        return;
       }
-    };
-    updateCheck();
-  }, [check, isCheckTouched]);
+
+      flashToast("Task updated successfully.", "success");
+    } catch (e) {
+      setMsg(createToast(e.response?.data?.message || "Error updating task"));
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="container-fluid">
@@ -80,6 +91,10 @@ export default function Notes() {
                   noteId={noteId}
                   check={check}
                   setCheck={handleCheckChange}
+                  feedback={feedback}
+                  setFeedback={setFeedback}
+                  onSubmitTask={handleSubmitTask}
+                  isSaving={isSaving}
                 />
               </div>
             </div>

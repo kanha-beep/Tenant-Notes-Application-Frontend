@@ -14,8 +14,9 @@ export default function AllUsers({
 }) {
   console.log("find filter Users: ", filterUsers);
   const userRole = localStorage.getItem("role");
-  // get all users done
   useEffect(() => {
+    let intervalId;
+
     const getAllUsers = async () => {
       try {
         const res = await api.get("/admin/users", {
@@ -30,7 +31,11 @@ export default function AllUsers({
         console.log("error in AllUsers:", e.response);
       }
     };
+
     getAllUsers();
+    intervalId = setInterval(getAllUsers, 30000);
+
+    return () => clearInterval(intervalId);
   }, [token]);
   useEffect(() => {
     if (!filterUsers) return;
