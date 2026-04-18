@@ -4,6 +4,7 @@ import api from "../init/instance.js";
 import HomePageButton from "../Components/Buttons/HomePageButton.jsx";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
 import { createToast, flashToast } from "../utils/toast.js";
+import { cn, uiTokens } from "../utils/uiTokens.js";
 
 export default function NewNotes() {
   const userRole = localStorage.getItem("role");
@@ -11,14 +12,14 @@ export default function NewNotes() {
   const navigate = useNavigate();
   const token = localStorage.getItem("tokens");
   const [data, setData] = useState({ title: "", content: "", user: "" });
+
   const handleChange = (e) => {
     setData((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
-  //new note
+
   const handleCreateNote = async (e) => {
     try {
       e.preventDefault();
-      console.log("data ready", data); //
       const res = await api.post("/notes/new", data, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -32,62 +33,51 @@ export default function NewNotes() {
       setMsg(createToast(e.response?.data?.message || "Failed to create note"));
     }
   };
+
   return (
-    <div className="container-fluid">
+    <div className="mx-auto max-w-3xl px-4 py-6">
       <Msg msg={msg} setMsg={setMsg} />
-      <div className="row justify-content-center">
-        <div className="col-12">
-          <h1 className="text-center py-4">Add Note Here By User</h1>
-        </div>
+      <div className="mb-6 text-center">
+        <h1 className="py-4 text-3xl font-bold text-slate-900">Add Note Here By User</h1>
       </div>
-      {/* new note form */}
-      <div className="row justify-content-center">
-        <div className="col-12 col-md-8 col-lg-6">
-          <form onSubmit={handleCreateNote} className="card p-4 shadow">
-            <div className="mb-3">
-              <input
-                type="text"
-                onChange={handleChange}
-                placeholder="Title of Note"
-                name="title"
-                value={data.title}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <textarea
-                onChange={handleChange}
-                placeholder="Content of Note"
-                name="content"
-                value={data.content}
-                className="form-control"
-                rows="4"
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <input
-                onChange={handleChange}
-                placeholder="User of Note"
-                name="user"
-                value={data.user}
-                className="form-control"
-                rows="4"
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-primary w-100 mb-3">
-              Create Note
-            </button>
-          </form>
-        </div>
-      </div>
-      {/* home page button */}
-      <div className="row justify-content-center mt-4">
-        <div className="col-12 text-center">
-          <HomePageButton userRole={userRole} />
-        </div>
+
+      <form onSubmit={handleCreateNote} className={cn(uiTokens.panel, "space-y-4")}>
+        <input
+          type="text"
+          onChange={handleChange}
+          placeholder="Title of Note"
+          name="title"
+          value={data.title}
+          className={uiTokens.input}
+          required
+        />
+        <textarea
+          onChange={handleChange}
+          placeholder="Content of Note"
+          name="content"
+          value={data.content}
+          className={cn(uiTokens.input, "min-h-32 resize-y")}
+          rows="4"
+          required
+        />
+        <input
+          onChange={handleChange}
+          placeholder="User of Note"
+          name="user"
+          value={data.user}
+          className={uiTokens.input}
+          required
+        />
+        <button
+          type="submit"
+          className={cn(uiTokens.buttonBase, uiTokens.buttonPrimary, "w-full")}
+        >
+          Create Note
+        </button>
+      </form>
+
+      <div className="mt-6 text-center">
+        <HomePageButton userRole={userRole} navigate={navigate} />
       </div>
     </div>
   );

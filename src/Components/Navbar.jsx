@@ -38,12 +38,12 @@ export default function MyNavbar({ isLoggedIn, setMsg, userRole }) {
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-sm font-bold text-white">
             T
           </div>
-          <div>
+          {/* <div>
             <p className="text-lg font-bold tracking-[-0.02em] text-slate-950">TenantApp</p>
             <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
               workspace platform
             </p>
-          </div>
+          </div> */}
         </Link>
 
         <button

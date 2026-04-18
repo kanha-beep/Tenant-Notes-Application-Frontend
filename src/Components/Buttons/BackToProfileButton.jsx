@@ -1,12 +1,13 @@
 import React from "react";
+import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function BackToProfileButton({navigate, usersId}) {
   return (
-    <div>
+    <div className="mt-4 text-center">
       <button
-        className="btn btn-outline-secondary m-2"
+        className={cn(uiTokens.buttonBase, uiTokens.buttonSecondary)}
         onClick={() => navigate(`/users/${usersId}`)}
-        style={{ position: "absolute", bottom: "1rem" }}
+        type="button"
       >
         Back to Profile
       </button>

@@ -1,12 +1,11 @@
 import React from "react";
+import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function DownloadButton({ notes }) {
   const handleDownloadUsers = () => {
-    //convert into csv
     const headers = Object.keys(notes).join(",") + "\n";
     const rows = notes.map((obj) => Object.values(obj).join(",")).join("\n");
     const usersArray = headers + rows;
-    //create blob
     const blob = new Blob([usersArray], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -16,12 +15,13 @@ export default function DownloadButton({ notes }) {
     link.click();
     link.remove();
   };
+
   return (
-    <div className="row">
-      {" "}
+    <div>
       <button
-        className="btn btn-primary rounded-5 w-100 w-md-auto"
+        className={cn(uiTokens.buttonBase, uiTokens.buttonPrimary, "w-full")}
         onClick={handleDownloadUsers}
+        type="button"
       >
         Download All Users Pdf
       </button>

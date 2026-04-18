@@ -4,9 +4,9 @@ export default function CreateButton() {
   return (
     <button
       type="submit"
-      className={cn(uiTokens.buttonBase, uiTokens.buttonAccent, "mb-3")}
+      className={cn(uiTokens.buttonBase, uiTokens.buttonAccent, "mb-3 w-full")}
     >
-      <span>Create User</span>
+      <span>Create</span>
     </button>
   );
 }

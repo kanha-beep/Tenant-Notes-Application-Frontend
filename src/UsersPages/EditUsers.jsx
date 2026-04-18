@@ -1,20 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HomePageButton from "../Components/Buttons/HomePageButton.jsx";
 import api from "../init/instance.js";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { cn, uiTokens } from "../utils/uiTokens.js";
+
 export default function EditUsers({ token }) {
   const navigate = useNavigate();
   const { userId } = useParams();
-  console.log("id..:", userId);
-  const classname = "form-control my-2";
   const [data, setData] = useState({
     username: "",
     email: "",
     password: "",
   });
-  // get user
+
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -23,7 +22,6 @@ export default function EditUsers({ token }) {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("user found: ", res.data);
         setData(res.data);
       } catch (e) {
         console.log("error in getting user: ", e.response.data);
@@ -31,14 +29,14 @@ export default function EditUsers({ token }) {
     };
     getUser();
   }, []);
+
   const handleChange = (e) => {
     setData((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
-  // edit user
+
   const handleEditUsers = async (e) => {
     try {
       e.preventDefault();
-      console.log("user ready", userId); //
       const res = await api.patch(`/admin/users/${userId}/edit`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -46,23 +44,25 @@ export default function EditUsers({ token }) {
       });
       console.log("Updated User: ", res.data);
       navigate(`/admin/users/${userId}`);
-      console.log("navigate");
     } catch (e) {
       console.log("error NewUsers F:", e.response.data);
     }
   };
+
   return (
-    <div className="row justify-content-center">
-      <h1 className="text-center"> Edit Users Here </h1>
-      <div className="col-6 col-md-6 col-lg-5 bg-dark">
-        <form onSubmit={handleEditUsers}>
+    <div className="mx-auto max-w-3xl px-4 py-6">
+      <h1 className="mb-6 text-center text-3xl font-bold text-slate-900">
+        Edit Users Here
+      </h1>
+      <div className={cn(uiTokens.panel, "space-y-4")}>
+        <form onSubmit={handleEditUsers} className="space-y-4">
           <input
             type="text"
             onChange={handleChange}
             placeholder="Username of User"
             name="username"
             value={data.username}
-            className={`${classname}`}
+            className={uiTokens.input}
           />
           <input
             type="text"
@@ -70,7 +70,7 @@ export default function EditUsers({ token }) {
             placeholder="Email of User"
             name="email"
             value={data.email}
-            className={`${classname}`}
+            className={uiTokens.input}
           />
           <input
             type="text"
@@ -78,12 +78,11 @@ export default function EditUsers({ token }) {
             placeholder="Password of User"
             name="password"
             value={data.password}
-            className={`${classname}`}
+            className={uiTokens.input}
           />
 
           <UpdateButton userId={userId} />
         </form>
-        <br />
         <HomePageButton navigate={navigate} />
       </div>
     </div>

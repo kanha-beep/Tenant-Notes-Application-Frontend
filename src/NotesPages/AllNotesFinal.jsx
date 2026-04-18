@@ -78,11 +78,11 @@ export default function AllNotesFinal() {
   return (
     <div className={`min-h-screen transition-all duration-500 ${mode ? "dark-mode" : ""}`}>
       <Msg msg={msg} setMsg={setMsg} />
-      <div className="container mx-auto px-4 py-6 mt-3">
+      <div className="container mx-auto px-4 py-6">
         <div className="text-center mb-8">
-          <h1 className={`text-4xl font-bold mb-4 transition-colors duration-300 ${mode ? "text-white" : "text-gray-800"}`}>
+          {/* <h1 className={`text-4xl font-bold mb-4 transition-colors duration-300 ${mode ? "text-white" : "text-gray-800"}`}>
             All Notes
-          </h1>
+          </h1> */}
           <div className="flex justify-center">
             {/* <SwitchMode mode={mode} setMode={setMode} /> */}
           </div>

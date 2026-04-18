@@ -1,11 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function AllNotesButton() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+
   return (
-    <div>
-      <button onClick={()=>navigate("/notes", { state: "notes" })}>All Notes</button>
-    </div>
+    <button
+      className={cn(uiTokens.buttonBase, uiTokens.buttonSecondary, "px-3 py-2")}
+      onClick={() => navigate("/notes", { state: "notes" })}
+      type="button"
+    >
+      All Notes
+    </button>
   );
 }

@@ -6,14 +6,15 @@ import HealthButton from "../../Components/Buttons/HealthButton.jsx";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import api from "../../init/instance.js";
+import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function Right({ details }) {
   const [value, setValue] = useState(new Date());
+
   const downloadUsers = async () => {
     try {
       const res = await api.get("/admin/users/reports");
       let csvContent = "data:text/csv;charset=utf-8,";
-      // csvContent += "Username,Email,Password,CreatedAt\n";
       const row = res?.data?.split("\n");
       row.forEach((r) => {
         csvContent += r + "\n";
@@ -30,10 +31,10 @@ export default function Right({ details }) {
       alert(e?.response?.data?.message);
     }
   };
+
   const downloadNotes = async () => {
     try {
       const res = await api.get("/notes/reports");
-      console.log("download notes: ", res?.data);
       const csvContent = "data:text/csv;charset=utf-8," + res?.data;
       const encodeUri = encodeURI(csvContent);
       const link = document.createElement("a");
@@ -46,155 +47,133 @@ export default function Right({ details }) {
       alert(e?.response?.data?.message);
     }
   };
+
   return (
-    <div className="h-100">
-      {/* Header */}
+    <div className="h-full">
       <div className="mb-4">
-        <h1 className="text-white fw-bold mb-2">📈 Admin Dashboard</h1>
-        <p className="text-white-50">
+        <h1 className="mb-2 text-3xl font-bold text-white">Admin Dashboard</h1>
+        <p className="text-white/70">
           Welcome back! Here's what's happening with your tenant management
           system.
         </p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="row g-4 mb-4">
-        <div className="col-md-6">
-          <div
-            className="card shadow-lg border-0"
-            style={{
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            }}
-          >
-            <div className="card-body text-white p-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h6 className="text-white-50 mb-2">Total Notes</h6>
-                  <h2 className="fw-bold mb-0">{details?.totalNotes ?? 0}</h2>
-                </div>
-                <div className="bg-white bg-opacity-20 rounded-circle p-3">
-                  <span style={{ fontSize: "2rem" }}>📝</span>
-                </div>
-              </div>
-              <div className="mt-3">
-                <AllNotesButton />
-                {/* <button
-                  onClick={() => window.open("/admin/users/reports", "_blank")}
-                >
-                  Download User Report
-                </button> */}
-                <button onClick={downloadNotes}>Download Notes</button>
-              </div>
+      <div className="mb-4 grid gap-4 md:grid-cols-2">
+        <div className="rounded-3xl bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] p-4 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h6 className="mb-2 text-white/70">Total Notes</h6>
+              <h2 className="mb-0 text-3xl font-bold">
+                {details?.totalNotes ?? 0}
+              </h2>
             </div>
+            <div className="rounded-full bg-white/20 p-3 text-lg font-semibold">
+              Notes
+            </div>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <AllNotesButton />
+            <button
+              className={cn(
+                uiTokens.buttonBase,
+                "border border-white/25 bg-white/10 px-3 py-2 text-white hover:bg-white/20"
+              )}
+              onClick={downloadNotes}
+              type="button"
+            >
+              Download Notes
+            </button>
           </div>
         </div>
 
-        <div className="col-md-6">
-          <div
-            className="card shadow-lg border-0"
-            style={{
-              background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-            }}
-          >
-            <div className="card-body text-white p-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h6 className="text-white-50 mb-2">Total Users</h6>
-                  <h2 className="fw-bold mb-0">{details?.totalUsers ?? 0}</h2>
-                </div>
-                <div className="bg-white bg-opacity-20 rounded-circle p-3">
-                  <span style={{ fontSize: "2rem" }}>👥</span>
-                </div>
-              </div>
-              <div className="mt-3">
-                <AllUsersButton />
-                <button onClick={downloadUsers}>Download All Users</button>
-              </div>
+        <div className="rounded-3xl bg-[linear-gradient(135deg,#f093fb_0%,#f5576c_100%)] p-4 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h6 className="mb-2 text-white/70">Total Users</h6>
+              <h2 className="mb-0 text-3xl font-bold">
+                {details?.totalUsers ?? 0}
+              </h2>
             </div>
+            <div className="rounded-full bg-white/20 p-3 text-lg font-semibold">
+              Users
+            </div>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <AllUsersButton />
+            <button
+              className={cn(
+                uiTokens.buttonBase,
+                "border border-white/25 bg-white/10 px-3 py-2 text-white hover:bg-white/20"
+              )}
+              onClick={downloadUsers}
+              type="button"
+            >
+              Download All Users
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Bottom Section */}
-      <div className="row g-4">
-        {/* Calendar */}
-        <div className="col-lg-6">
-          <div
-            className="card shadow-lg border-0"
-            style={{
-              background: "rgba(255,255,255,0.95)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            <div className="card-body p-4">
-              <h5 className="fw-bold mb-3 text-dark">📅 Calendar</h5>
-              <Calendar onChange={setValue} value={value} className="w-100" />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
+          <h5 className="mb-3 text-lg font-bold text-slate-900">Calendar</h5>
+          <Calendar onChange={setValue} value={value} className="w-100" />
 
-              <div className="d-flex gap-2 mt-4">
-                <PlanButton />
-                <HealthButton />
-              </div>
-            </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <PlanButton />
+            <HealthButton />
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="col-lg-6">
-          <div
-            className="card shadow-lg border-0"
-            style={{
-              background: "rgba(255,255,255,0.95)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            <div className="card-body p-4">
-              <h5 className="fw-bold mb-4 text-dark">🎯 Quick Actions</h5>
-              <div className="d-grid gap-3">
-                <div className="p-3 bg-light rounded-3 d-flex align-items-center justify-content-between">
-                  <div>
-                    <h6 className="mb-1 fw-semibold">System Health</h6>
-                    <small className="text-muted">
-                      All systems operational
-                    </small>
-                  </div>
-                  <span className="badge bg-success">✓ Online</span>
+        <div className="space-y-3">
+          <div className="rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
+            <h5 className="mb-4 text-lg font-bold text-slate-900">
+              Quick Actions
+            </h5>
+            <div className="grid gap-3">
+              <div className="flex items-center justify-between rounded-2xl bg-slate-100 p-3">
+                <div>
+                  <h6 className="mb-1 font-semibold">System Health</h6>
+                  <small className="text-slate-500">
+                    All systems operational
+                  </small>
                 </div>
-                <div className="p-3 bg-light rounded-3 d-flex align-items-center justify-content-between">
-                  <div>
-                    <h6 className="mb-1 fw-semibold">Active Sessions</h6>
-                    <small className="text-muted">Users currently online</small>
-                  </div>
-                  <span className="badge bg-primary">
-                    {details?.totalUsers ?? 0}
-                  </span>
+                <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                  Online
+                </span>
+              </div>
+              <div className="flex items-center justify-between rounded-2xl bg-slate-100 p-3">
+                <div>
+                  <h6 className="mb-1 font-semibold">Active Sessions</h6>
+                  <small className="text-slate-500">
+                    Users currently online
+                  </small>
                 </div>
-                <div className="p-3 bg-light rounded-3 d-flex align-items-center justify-content-between">
-                  <div>
-                    <h6 className="mb-1 fw-semibold">Recent Activity</h6>
-                    <small className="text-muted">Latest user actions</small>
-                  </div>
-                  <span className="badge bg-info">
-                    {details?.totalNotes ?? 0}
-                  </span>
+                <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">
+                  {details?.totalUsers ?? 0}
+                </span>
+              </div>
+              <div className="flex items-center justify-between rounded-2xl bg-slate-100 p-3">
+                <div>
+                  <h6 className="mb-1 font-semibold">Recent Activity</h6>
+                  <small className="text-slate-500">Latest user actions</small>
                 </div>
+                <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-700">
+                  {details?.totalNotes ?? 0}
+                </span>
               </div>
             </div>
           </div>
-          <div
-            className="card p-0 mt-2 border-0 lg-shadow"
-            style={{
-              background: "rgba(255,255,255,0.95)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            <div className="card-body">
-              {details?.allAdmins.map((admin) => (
-                <ul>
-                  {" "}
-                  <li>{admin?.email}</li>
-                </ul>
-              ))}
-            </div>
+
+          <div className="rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Tenant admins
+            </p>
+            {details?.allAdmins?.map((admin) => (
+              <ul key={admin?._id} className="mb-2 list-disc pl-5 text-slate-700">
+                <li>{admin?.email}</li>
+              </ul>
+            ))}
           </div>
         </div>
       </div>

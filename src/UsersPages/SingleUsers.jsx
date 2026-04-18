@@ -74,11 +74,11 @@ export default function SingleUsers() {
 
   return (
     <div className="mx-auto max-w-6xl px-3 py-4">
-      {userRole === "admin" && toShowAdmin === "users" && (
+      {/* {userRole === "admin" && toShowAdmin === "users" && (
         <h2 className="mb-4 text-center text-3xl font-black tracking-[-0.03em] text-slate-900">
           Single User
         </h2>
-      )}
+      )} */}
       <Msg msg={msg} setMsg={setMsg} />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_0.95fr]">

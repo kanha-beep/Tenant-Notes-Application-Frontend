@@ -3,41 +3,54 @@ import { Link } from "react-router-dom";
 
 export default function Left() {
   return (
-    <div className="card shadow-lg h-100" style={{background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)'}}>
-      <div className="card-body p-4">
-        {/* Profile Section */}
-        <div className="text-center mb-4">
-          <div className="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style={{width: '80px', height: '80px'}}>
-            <span className="text-white" style={{fontSize: '2rem'}}>👨‍💼</span>
-          </div>
-          <h5 className="mt-3 mb-1 fw-bold text-dark">Admin Panel</h5>
-          <p className="text-muted small">System Administrator</p>
+    <div className="h-full rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
+      <div className="mb-4 text-center">
+        <div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-sky-600">
+          <span className="text-lg font-bold text-white">Admin</span>
         </div>
-        
-        {/* Navigation Menu */}
-        <nav className="nav flex-column gap-2">
-          <Link className="nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-decoration-none text-dark" to="/admin/dashboard" style={{transition: 'all 0.2s ease'}}>
-            <span>🏠</span>
-            <span className="fw-medium">Dashboard</span>
-          </Link>
-          <Link className="nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-decoration-none text-dark" to="/admin/users" style={{transition: 'all 0.2s ease'}}>
-            <span>👥</span>
-            <span className="fw-medium">Users</span>
-          </Link>
-          <Link className="nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-decoration-none text-dark" to="/notes" style={{transition: 'all 0.2s ease'}}>
-            <span>📝</span>
-            <span className="fw-medium">Notes</span>
-          </Link>
-          <Link className="nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-decoration-none text-dark" to="/admin/plan" style={{transition: 'all 0.2s ease'}}>
-            <span>📈</span>
-            <span className="fw-medium">Analytics</span>
-          </Link>
-          <Link className="nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-decoration-none text-dark" to="/health" style={{transition: 'all 0.2s ease'}}>
-            <span>⚙️</span>
-            <span className="fw-medium">Settings</span>
-          </Link>
-        </nav>
+        <h5 className="mb-1 mt-3 text-xl font-bold text-slate-900">
+          Admin Panel
+        </h5>
+        <p className="text-sm text-slate-500">System Administrator</p>
       </div>
+
+      <nav className="flex flex-col gap-2">
+        <Link
+          className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+          to="/admin/dashboard"
+        >
+          <span>Home</span>
+          <span className="font-medium">Dashboard</span>
+        </Link>
+        <Link
+          className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+          to="/admin/users"
+        >
+          <span>Users</span>
+          <span className="font-medium">Users</span>
+        </Link>
+        <Link
+          className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+          to="/notes"
+        >
+          <span>Notes</span>
+          <span className="font-medium">Notes</span>
+        </Link>
+        <Link
+          className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+          to="/admin/plan"
+        >
+          <span>Plan</span>
+          <span className="font-medium">Analytics</span>
+        </Link>
+        <Link
+          className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+          to="/health"
+        >
+          <span>Health</span>
+          <span className="font-medium">Settings</span>
+        </Link>
+      </nav>
     </div>
   );
 }

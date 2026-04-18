@@ -6,12 +6,12 @@ import CreateButton from "../../Components/Buttons/CreateButton.jsx";
 import HomePageButton from "../../Components/Buttons/HomePageButton.jsx";
 import Msg from "../../Components/AlertBoxes/Msg.jsx";
 import { createToast, flashToast } from "../../utils/toast.js";
+import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function NewUsersCards() {
   const userRole = localStorage.getItem("role");
   const location = useLocation();
-  const toShowAdmin = location?.state || "users"
-  console.log("role we got: 11 ", userRole);
+  const toShowAdmin = location?.state || "users";
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("tokens");
@@ -21,12 +21,13 @@ export default function NewUsersCards() {
     email: "",
     username: "",
   });
+
   const handleChange = (e) => {
     setData((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
+
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    console.log("Form submitted, data ready:", data);
     try {
       const res = await api.post("/admin/users/new", data, {
         headers: {
@@ -37,52 +38,60 @@ export default function NewUsersCards() {
       flashToast("User created successfully.", "success");
       navigate("/admin/users");
     } catch (error) {
-      console.error("Error response:", error.response?.data);
-      setMsg(createToast(error.response?.data?.message || "Failed to create user"));
+      setMsg(
+        createToast(error.response?.data?.message || "Failed to create user")
+      );
     }
   };
+
   return (
-    <div className="container">
+    <div className="mx-auto max-w-3xl px-4 py-6">
       <Msg msg={msg} setMsg={setMsg} action={<PlanButton />} />
-      <h1 className="text-center"> Add Users Here by Admin </h1>
-      <div className="row justify-content-center">
-        <form onSubmit={handleCreateUser} className="col-12 col-lg-6 col-md-8">
-          <input
-            type="text"
-            onChange={handleChange}
-            placeholder="Username of User"
-            name="username"
-            value={data.username}
-            className="form-control my-3"
-          />
-          <input
-            type="text"
-            onChange={handleChange}
-            placeholder="Email of User"
-            name="email"
-            value={data.email}
-            className="form-control my-3"
-          />
-          <input
-            type="text"
-            onChange={handleChange}
-            placeholder="Title of User"
-            name="title"
-            value={data.title}
-            className="form-control my-3"
-          />
-          <input
-            type="text"
-            onChange={handleChange}
-            placeholder="Content of User"
-            name="content"
-            value={data.content}
-            className="form-control my-3"
-          />
-          <CreateButton navigate={navigate}/>
-        </form>
+      <h1 className="mb-6 text-center text-3xl font-bold text-slate-900">
+        Add Users Here by Admin
+      </h1>
+      <form onSubmit={handleCreateUser} className={cn(uiTokens.panel, "space-y-4")}>
+        <input
+          type="text"
+          onChange={handleChange}
+          placeholder="Username of User"
+          name="username"
+          value={data.username}
+          className={uiTokens.input}
+        />
+        <input
+          type="text"
+          onChange={handleChange}
+          placeholder="Email of User"
+          name="email"
+          value={data.email}
+          className={uiTokens.input}
+        />
+        <input
+          type="text"
+          onChange={handleChange}
+          placeholder="Title of User"
+          name="title"
+          value={data.title}
+          className={uiTokens.input}
+        />
+        <input
+          type="text"
+          onChange={handleChange}
+          placeholder="Content of User"
+          name="content"
+          value={data.content}
+          className={uiTokens.input}
+        />
+        <CreateButton navigate={navigate} />
+      </form>
+      <div className="mt-6 text-center">
+        <HomePageButton
+          userRole={userRole}
+          toShowAdmin={toShowAdmin}
+          navigate={navigate}
+        />
       </div>
-      <HomePageButton userRole={userRole} toShowAdmin={toShowAdmin} navigate={navigate}/>
     </div>
   );
 }

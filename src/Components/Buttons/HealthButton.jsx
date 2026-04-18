@@ -1,13 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function HealthButton() {
   const navigate = useNavigate();
+
   return (
-    <div>
-      <button className="btn btn-warning" onClick={() => navigate("/health")}>
-        Health Check
-      </button>
-    </div>
+    <button
+      className={cn(uiTokens.buttonBase, uiTokens.buttonSecondary, "px-3 py-2")}
+      onClick={() => navigate("/health")}
+      type="button"
+    >
+      Health Check
+    </button>
   );
 }

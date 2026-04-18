@@ -4,24 +4,25 @@ import api from "../init/instance.js";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
 import { createToast, flashToast } from "../utils/toast.js";
+import { cn, uiTokens } from "../utils/uiTokens.js";
+
 export default function EditNotes() {
-  const { noteId } = useParams(); // Get note ID from URL
+  const { noteId } = useParams();
   const navigate = useNavigate();
   const token = localStorage.getItem("tokens");
   const [msg, setMsg] = useState("");
   const [data, setData] = useState({ title: "", content: "" });
 
-  //get single note
   useEffect(() => {
     const fetchNote = async () => {
       try {
-      const res = await api.get(`/notes/${noteId}/edit`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setData(res.data);
-    } catch (e) {
-      setMsg(createToast(e.response?.data?.message || "Error fetching note"));
-    }
+        const res = await api.get(`/notes/${noteId}/edit`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setData(res.data);
+      } catch (e) {
+        setMsg(createToast(e.response?.data?.message || "Error fetching note"));
+      }
     };
     fetchNote();
   }, [noteId, token]);
@@ -29,7 +30,7 @@ export default function EditNotes() {
   const handleChange = (e) => {
     setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-// edit note
+
   const handleEditNote = async (e) => {
     e.preventDefault();
     try {
@@ -38,60 +39,49 @@ export default function EditNotes() {
       });
       console.log("Edited Note: ", res.data);
       flashToast("Note updated successfully.", "success");
-      navigate(`/notes/${noteId}`); // Redirect to notes page
+      navigate(`/notes/${noteId}`);
     } catch (e) {
       setMsg(createToast(e.response?.data?.message || "Error updating note"));
     }
   };
 
   return (
-    <div className="container-fluid">
+    <div className="mx-auto max-w-3xl px-4 py-6">
       <Msg msg={msg} setMsg={setMsg} />
-      <div className="row justify-content-center">
-        <div className="col-12">
-          <h1 className="text-center py-4">Edit Note</h1>
-        </div>
+      <div className="mb-6 text-center">
+        <h1 className="py-4 text-3xl font-bold text-slate-900">Edit Note</h1>
       </div>
-      {/* edit form */}
-      <div className="row justify-content-center">
-        <div className="col-12 col-md-8 col-lg-6">
-          <form onSubmit={handleEditNote} className="card p-4 shadow">
-            <div className="mb-3">
-              <input
-                type="text"
-                name="title"
-                placeholder="Title of Note"
-                value={data.title}
-                onChange={handleChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <textarea
-                name="content"
-                placeholder="Content of Note"
-                value={data.content}
-                onChange={handleChange}
-                className="form-control"
-                rows="4"
-                required
-              />
-            </div>
-            <UpdateButton/>
-          </form>
-        </div>
-      </div>
-      {/* back to all notes */}
-      <div className="row justify-content-center mt-4">
-        <div className="col-12 text-center">
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => navigate("/notes")}
-          >
-            Back to Notes
-          </button>
-        </div>
+
+      <form onSubmit={handleEditNote} className={cn(uiTokens.panel, "space-y-4")}>
+        <input
+          type="text"
+          name="title"
+          placeholder="Title of Note"
+          value={data.title}
+          onChange={handleChange}
+          className={uiTokens.input}
+          required
+        />
+        <textarea
+          name="content"
+          placeholder="Content of Note"
+          value={data.content}
+          onChange={handleChange}
+          className={cn(uiTokens.input, "min-h-32 resize-y")}
+          rows="4"
+          required
+        />
+        <UpdateButton />
+      </form>
+
+      <div className="mt-6 text-center">
+        <button
+          className={cn(uiTokens.buttonBase, uiTokens.buttonSecondary)}
+          onClick={() => navigate("/notes")}
+          type="button"
+        >
+          Back to Notes
+        </button>
       </div>
     </div>
   );

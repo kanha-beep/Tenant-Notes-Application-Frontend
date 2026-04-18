@@ -1,17 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function PlanButton() {
   const navigate = useNavigate();
+
   return (
-    <div>
-      {" "}
-      <button
-        className="btn btn-success"
-        onClick={() => navigate("/admin/plan")}
-      >
-        Plan Buy
-      </button>
-    </div>
+    <button
+      className={cn(uiTokens.buttonBase, uiTokens.buttonAccent, "px-3 py-2")}
+      onClick={() => navigate("/admin/plan")}
+      type="button"
+    >
+      Plan Buy
+    </button>
   );
 }

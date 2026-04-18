@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import api from "../init/instance.js";
 import ViewButton from "../Components/Buttons/ViewButton.jsx";
+
 export default function CurrentOwner({
   owner,
   token,
@@ -24,12 +25,13 @@ export default function CurrentOwner({
   useEffect(() => {
     currentOwner();
   }, []);
+
   return (
     <div>
       {owner && (
         <div
           key={owner?._id}
-          className="p-3 mb-3 rounded-5 bg-info col-12 col-sm-6 col-md-4"
+          className="mb-3 rounded-3xl bg-sky-100 p-4 text-slate-800 sm:w-1/2 md:w-1/3"
         >
           <p>
             Current OwnerId: <b>{owner?._id}</b> <br />

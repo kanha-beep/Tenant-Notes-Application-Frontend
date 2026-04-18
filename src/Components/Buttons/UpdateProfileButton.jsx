@@ -1,9 +1,13 @@
 import React from "react";
+import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function UpdateProfileButton() {
   return (
-    <div>
-      <button className="btn btn-outline-primary m-2">Update</button>
-    </div>
+    <button
+      className={cn(uiTokens.buttonBase, uiTokens.buttonSecondary, "m-2")}
+      type="button"
+    >
+      Update
+    </button>
   );
 }

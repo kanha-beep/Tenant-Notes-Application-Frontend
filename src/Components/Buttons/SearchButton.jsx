@@ -1,4 +1,4 @@
-
+import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function SearchButton({
   userRole,
@@ -7,34 +7,37 @@ export default function SearchButton({
   onSearch,
 }) {
   return (
-    <div className="col-12 col-md-6 col-lg-8 order-lg-2 mb-4">
-      <div className="row g-3">
-        <div className="col-12 col-sm-8">
-          <label className="form-label fw-semibold text-dark">
-            🔍 {userRole === "admin" ? "Search Users" : "Search Notes"}
+    <div className="lg:order-2">
+      <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_10rem]">
+        <div>
+          <label className={uiTokens.label}>
+            {userRole === "admin" ? "Search Users" : "Search Notes"}
           </label>
           <input
             type="text"
-            placeholder={userRole === "admin" ? "👤 Search User..." : "📝 Search Notes by Title..."}
+            placeholder={
+              userRole === "admin" ? "Search user..." : "Search notes by title..."
+            }
             onChange={(e) => setSearch(e.target.value)}
             value={search}
-            className="form-control form-control-lg shadow-sm"
+            className={uiTokens.input}
           />
         </div>
-        <div className="col-12 col-sm-4 d-flex align-items-end">
+        <div className="flex items-end">
           <button
             onClick={onSearch}
-            className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 fw-semibold w-100 shadow"
+            className={cn(uiTokens.buttonBase, uiTokens.buttonPrimary, "w-full")}
+            type="button"
           >
-            <span>🔍</span>
             <span>Search</span>
           </button>
         </div>
       </div>
       {search && (
-        <div className="alert alert-info mt-3 d-flex align-items-center gap-2">
-          <span>🔎</span>
-          <span>Searching for: <strong>{search}</strong></span>
+        <div className="mt-3 flex items-center gap-2 rounded-xl border border-sky-100 bg-sky-50 px-4 py-3 text-sm text-sky-800">
+          <span>
+            Searching for: <strong>{search}</strong>
+          </span>
         </div>
       )}
     </div>

@@ -18,7 +18,7 @@ export default function AllUsersFinal() {
   // const [toShowAdmin, setToShowAdmin] = useState(location.state);
   // localStorage.setItem("toShowAdmin", toShowAdmin)
   const [filterUsers, setFilterUsers] = useState([]);
-  const [mode, setMode] = useState(false);
+  // const [mode, setMode] = useState(false);
   // console.log("admin will get", toShowAdmin);
   const [toShowAdmin, setToShowAdmin] = useState(() => {
     return localStorage.getItem("toShowAdmin") || "users";
@@ -30,11 +30,9 @@ export default function AllUsersFinal() {
   }, [toShowAdmin]);
 
   return (
-    <div className={`min-h-screen transition-all duration-500 ${
-      mode ? 'dark-mode' : ''
-    }`}>
+    <div className="min-h-screen transition-all duration-500">
       <div className="container mx-auto px-4 py-6">
-        <div className="text-center mb-8 mt-3">
+        {/* <div className="text-center mb-8 mt-3">
           <h1 className={`text-4xl font-bold mb-4 transition-colors duration-300 ${
             mode ? 'text-white' : 'text-gray-800'
           }`}>
@@ -43,7 +41,7 @@ export default function AllUsersFinal() {
           <div className="flex justify-center">
             <SwitchMode mode={mode} setMode={setMode} />
           </div>
-        </div>
+        </div> */}
         
         <div className="mb-8">
           <NewButton navigate={navigate} userRole={userRole} toShowAdmin={toShowAdmin}/>

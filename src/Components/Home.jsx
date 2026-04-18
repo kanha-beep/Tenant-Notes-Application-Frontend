@@ -1,193 +1,279 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const featureCards = [
-  {
-    title: "Tenant management",
-    description:
-      "Organize each company with cleaner boundaries, clearer ownership, and less dashboard clutter.",
-    tone: "from-sky-500/15 to-cyan-400/10",
-    icon: "TN",
-  },
-  {
-    title: "Notes that stay useful",
-    description:
-      "Turn updates, decisions, and internal context into a shared knowledge layer your team can actually navigate.",
-    tone: "from-emerald-500/15 to-teal-400/10",
-    icon: "NT",
-  },
-  {
-    title: "Admin visibility",
-    description:
-      "Give admins a stronger overview of people, activity, and operations from one polished surface.",
-    tone: "from-violet-500/15 to-fuchsia-400/10",
-    icon: "AD",
-  },
-];
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-const productStats = [
-  { value: "Teams", label: "structured by role" },
-  { value: "Notes", label: "centralized in one place" },
-  { value: "Admins", label: "with better oversight" },
-];
-
-const sections = [
-  {
-    title: "Editorial-style clarity",
-    text: "Inspired by modern publishing products, the layout uses stronger hierarchy, cleaner spacing, and more readable content blocks.",
-  },
-  {
-    title: "SaaS-style conversion",
-    text: "The page guides users toward the two real actions that matter here: entering the workspace and checking system status.",
-  },
-  {
-    title: "Tailwind-first structure",
-    text: "Everything is built with utility classes so the homepage stays easier to evolve inside your React app.",
-  },
-];
+const eyebrowClass =
+  "m-0 text-[0.84rem] font-bold uppercase tracking-[0] text-[#9fd4b2]";
+const primaryActionClass =
+  "inline-flex min-h-[46px] items-center justify-center rounded-[8px] border border-transparent bg-[#a6d6b3] px-[18px] text-[1rem] font-bold text-[#182019]";
+const secondaryActionClass =
+  "inline-flex min-h-[46px] items-center justify-center rounded-[8px] border border-[rgba(247,247,243,0.18)] bg-[rgba(247,247,243,0.12)] px-[18px] text-[1rem] text-[#f7f7f3]";
+const sectionTitleClass =
+  "mt-[10px] text-[clamp(1.9rem,3vw,3.4rem)] leading-[1.04] text-[#1d221d]";
+const sectionBodyClass =
+  "mt-[18px] max-w-[650px] text-[1.08rem] leading-[1.7] text-[#576057]";
 
 export default function Home() {
-  return (
-    <main className="w-full overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
-      <section className="relative overflow-hidden px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.14),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.12),transparent_26%),linear-gradient(180deg,#f8fbff_0%,#ffffff_72%)]" />
-        <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="max-w-3xl">
-            <span className="inline-flex rounded-full border border-sky-100 bg-sky-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-sky-700">
-              Modern tenant workspace
-            </span>
+  const [homepage, setHomepage] = useState(null);
+  const [error, setError] = useState("");
+  const healthUrl = `${API_BASE}/api/health`;
+  const homepageDataUrl = `${API_BASE}/api/homepage`;
 
-            <h1 className="mt-6 text-4xl font-black leading-tight tracking-[-0.03em] text-slate-950 sm:text-5xl lg:text-6xl">
-              A sharper homepage for tenant, notes, and team operations.
-            </h1>
+  useEffect(() => {
+    const loadHomepage = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/api/homepage`);
 
-            <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-              Designed with Tailwind CSS and guided by current blogging software
-              patterns, this homepage mixes product storytelling with a cleaner
-              admin-software feel so the app looks modern without losing its purpose.
-            </p>
+        if (!response.ok) {
+          throw new Error("Failed to load homepage");
+        }
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
-                to="/auth"
-                className="inline-flex items-center justify-center rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-slate-800"
-              >
-                Open workspace
-              </Link>
-              <Link
-                to="/health"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition duration-200 hover:border-sky-200 hover:text-sky-700"
-              >
-                Check system health
-              </Link>
-            </div>
+        const data = await response.json();
+        setHomepage(data);
+      } catch (loadError) {
+        setError(loadError.message);
+      }
+    };
 
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
-              {productStats.map((item) => (
-                <article
-                  key={item.label}
-                  className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm"
-                >
-                  <p className="text-2xl font-extrabold text-slate-900">{item.value}</p>
-                  <p className="mt-1 text-sm text-slate-500">{item.label}</p>
-                </article>
-              ))}
-            </div>
-          </div>
+    loadHomepage();
+  }, []);
 
-          <div className="rounded-[1.8rem] border border-slate-200 bg-slate-950 p-5 text-white shadow-[0_26px_70px_rgba(15,23,42,0.22)]">
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium uppercase tracking-[0.24em] text-sky-300">
-                    Product snapshot
-                  </p>
-                  <h2 className="mt-2 text-3xl font-bold tracking-[-0.03em] text-white">
-                    One system for teams and tenant records
-                  </h2>
-                </div>
-                <div className="rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-semibold text-emerald-300">
-                  Active
-                </div>
-              </div>
+  if (!homepage && !error) {
+    return (
+      <main className="min-h-screen p-4 max-[760px]:p-3">
+        <section className="grid min-h-[calc(100vh-32px)] place-items-center rounded-[8px] bg-[linear-gradient(180deg,rgba(17,23,18,0.16),rgba(17,23,18,0.48)),url('https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center text-center text-[#f7f7f3]">
+          Loading homepage...
+        </section>
+      </main>
+    );
+  }
 
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl bg-sky-400/10 p-4 ring-1 ring-sky-300/20">
-                  <p className="text-sm text-sky-200">Users and roles</p>
-                  <p className="mt-2 text-lg font-semibold text-white">
-                    Built for admins, owners, and everyday users.
-                  </p>
-                </div>
-                <div className="rounded-2xl bg-violet-400/10 p-4 ring-1 ring-violet-300/20">
-                  <p className="text-sm text-violet-200">Operational notes</p>
-                  <p className="mt-2 text-lg font-semibold text-white">
-                    Capture updates without losing accountability.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-4 rounded-2xl bg-white/6 p-4 ring-1 ring-white/10">
-                <p className="text-sm text-slate-300">Why this direction works</p>
-                <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-200">
-                  <li>Cleaner than a plain hero banner.</li>
-                  <li>More relevant to your product than a generic blog clone.</li>
-                  <li>Balances modern SaaS design with real app context.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-6 pb-8 sm:px-8 lg:px-12">
-        <div className="grid gap-6 lg:grid-cols-3">
-          {featureCards.map((card) => (
-            <article
-              key={card.title}
-              className={`rounded-[1.6rem] border border-slate-200 bg-gradient-to-br ${card.tone} p-6 shadow-sm`}
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sm font-bold text-slate-900 shadow-sm">
-                {card.icon}
-              </div>
-              <h3 className="mt-5 text-xl font-bold text-slate-900">{card.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{card.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-t border-slate-200 px-6 py-8 sm:px-8 lg:px-12 lg:py-10">
-        <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+  if (!homepage) {
+    return (
+      <main className="min-h-screen p-4 max-[760px]:p-3">
+        <section className="grid min-h-[calc(100vh-32px)] place-items-center rounded-[8px] bg-[linear-gradient(180deg,rgba(17,23,18,0.16),rgba(17,23,18,0.48)),url('https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center px-4 text-center text-[#f7f7f3]">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-700">
-              Design direction
-            </p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.03em] text-slate-950">
-              Modern inspiration, adapted to your actual app.
-            </h2>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 sm:text-base">
-              The structure takes cues from current writing platforms that use calm
-              layout, layered cards, and strong content hierarchy, but it stays focused
-              on tenants, notes, and admin workflows instead of pretending this is a newsletter product.
-            </p>
+            <p>{error}</p>
+            <p>Start the API and refresh the page.</p>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen p-4 max-[760px]:p-3">
+      <section className="relative flex min-h-[86vh] flex-col justify-between overflow-hidden rounded-[8px] bg-[linear-gradient(180deg,rgba(16,20,16,0.18),rgba(16,20,16,0.62)),url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center text-[#f7f7f3] max-[760px]:min-h-[78vh]">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,23,18,0.82)_0%,rgba(17,23,18,0.3)_58%),linear-gradient(180deg,rgba(17,23,18,0.1),rgba(17,23,18,0.34))]" />
+
+        <header className="relative z-[1] flex items-center gap-[14px] px-7 pt-6 max-[760px]:flex-wrap max-[760px]:items-start max-[760px]:px-4">
+          <div className="grid h-10 w-10 place-items-center rounded-[8px] border border-[rgba(247,247,243,0.18)] bg-[rgba(247,247,243,0.14)] font-bold">
+            T
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.98rem] font-bold">{homepage.brand.name}</span>
+            <span className="text-[0.82rem] text-[rgba(247,247,243,0.78)]">
+              {homepage.brand.subtitle}
+            </span>
+          </div>
+          <nav
+            className="ml-auto flex flex-wrap gap-[18px] max-[760px]:ml-0 max-[760px]:w-full max-[760px]:gap-3"
+            aria-label="Primary"
+          >
+            <a className="text-[0.94rem] text-[rgba(247,247,243,0.9)]" href="#workflow">
+              Workflow
+            </a>
+            <a className="text-[0.94rem] text-[rgba(247,247,243,0.9)]" href="#admin">
+              Admin
+            </a>
+            <a className="text-[0.94rem] text-[rgba(247,247,243,0.9)]" href="#users">
+              Users
+            </a>
+            <a className="text-[0.94rem] text-[rgba(247,247,243,0.9)]" href="#plans">
+              Plans
+            </a>
+          </nav>
+        </header>
+
+        <div className="relative z-[1] max-w-[760px] px-7 pb-10 max-[760px]:px-4">
+          <p className={eyebrowClass}>{homepage.hero.badge}</p>
+          <h1 className="mt-[10px] text-[clamp(2.3rem,4vw,5rem)] leading-[1.04]">
+            {homepage.hero.title}
+          </h1>
+          <p className="mt-[18px] max-w-[650px] text-[1.08rem] leading-[1.7] text-[rgba(247,247,243,0.82)]">
+            {homepage.hero.description}
+          </p>
+
+          <div className="mt-7 flex flex-wrap gap-3">
+            <a className={primaryActionClass} href="/auth">
+              Login to workspace
+            </a>
+            <a
+              className={secondaryActionClass}
+              href={healthUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Check system health
+            </a>
           </div>
 
-          <div className="grid gap-4">
-            {sections.map((section, index) => (
+          <div className="mt-8 grid grid-cols-3 gap-3 max-[760px]:grid-cols-1">
+            {homepage.metrics.map((metric) => (
               <article
-                key={section.title}
-                className="flex gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                className="min-h-[94px] rounded-[8px] border border-[rgba(247,247,243,0.16)] bg-[rgba(247,247,243,0.1)] p-4"
+                key={metric.label}
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-950 text-sm font-bold text-white">
-                  {index + 1}
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900">{section.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{section.text}</p>
-                </div>
+                <strong className="block text-[1.8rem]">{metric.value}</strong>
+                <span className="mt-[6px] block text-[rgba(247,247,243,0.78)]">
+                  {metric.label}
+                </span>
               </article>
             ))}
           </div>
         </div>
+      </section>
+
+      <section className="mt-[18px] grid gap-[18px]">
+        <section
+          className="grid grid-cols-[minmax(0,1fr)_minmax(300px,420px)] gap-[18px] rounded-[8px] border border-[#d7dbd4] bg-[#fafaf6] p-6 max-[1100px]:grid-cols-1 max-[760px]:px-4"
+          id="workflow"
+        >
+          <div>
+            <p className={eyebrowClass}>What the software actually does</p>
+            <h2 className={sectionTitleClass}>{homepage.intro.title}</h2>
+          </div>
+          <p className={sectionBodyClass}>{homepage.intro.description}</p>
+        </section>
+
+        <section className="grid grid-cols-4 gap-[14px] max-[1100px]:grid-cols-1">
+          {homepage.workflow.map((step) => (
+            <article
+              className="rounded-[8px] border border-[#dde2db] bg-[#f1f3ee] p-[18px]"
+              key={step.title}
+            >
+              <span className="mb-[14px] inline-block text-[0.84rem] font-bold text-[#576057]">
+                {step.step}
+              </span>
+              <h3 className="m-0 text-[1.16rem]">{step.title}</h3>
+              <p className="mt-[10px] leading-[1.65] text-[#576057]">
+                {step.description}
+              </p>
+            </article>
+          ))}
+        </section>
+
+        <section
+          className="grid grid-cols-2 items-start gap-[18px] rounded-[8px] border border-[#d7dbd4] bg-[#fafaf6] p-6 max-[1100px]:grid-cols-1 max-[760px]:px-4"
+          id="admin"
+        >
+          <div>
+            <p className={eyebrowClass}>Admin workflow</p>
+            <h2 className={sectionTitleClass}>{homepage.admin.title}</h2>
+            <p className={sectionBodyClass}>{homepage.admin.description}</p>
+          </div>
+          <div className="grid gap-3">
+            {homepage.admin.features.map((feature) => (
+              <article
+                className="rounded-[8px] border border-[#dde2db] bg-[#f1f3ee] p-[18px]"
+                key={feature.title}
+              >
+                <strong className="text-[1.05rem]">{feature.title}</strong>
+                <p className="mt-[10px] leading-[1.65] text-[#576057]">
+                  {feature.description}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section
+          className="grid grid-cols-2 items-start gap-[18px] rounded-[8px] border border-[#d7dbd4] bg-[#f7f8f3] p-6 max-[1100px]:grid-cols-1 max-[760px]:px-4"
+          id="users"
+        >
+          <div className="grid gap-3">
+            {homepage.user.features.map((feature) => (
+              <article
+                className="rounded-[8px] border border-[#dde2db] bg-[#f1f3ee] p-[18px]"
+                key={feature.title}
+              >
+                <strong className="text-[1.05rem]">{feature.title}</strong>
+                <p className="mt-[10px] leading-[1.65] text-[#576057]">
+                  {feature.description}
+                </p>
+              </article>
+            ))}
+          </div>
+          <div>
+            <p className={eyebrowClass}>User workflow</p>
+            <h2 className={sectionTitleClass}>{homepage.user.title}</h2>
+            <p className={sectionBodyClass}>{homepage.user.description}</p>
+          </div>
+        </section>
+
+        <section className="grid grid-cols-3 gap-[14px] max-[1100px]:grid-cols-1">
+          {homepage.evidence.map((item) => (
+            <article
+              className="rounded-[8px] border border-[#dde2db] bg-[#f1f3ee] p-[18px]"
+              key={item.title}
+            >
+              <p className={eyebrowClass}>{item.label}</p>
+              <h3 className="m-0 mt-[10px] text-[1.16rem] text-[#1d221d]">
+                {item.title}
+              </h3>
+              <p className="mt-[10px] leading-[1.65] text-[#576057]">
+                {item.description}
+              </p>
+            </article>
+          ))}
+        </section>
+
+        <section
+          className="grid grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-[18px] rounded-[8px] border border-[#d7dbd4] bg-[#fafaf6] p-6 max-[1100px]:grid-cols-1 max-[760px]:px-4"
+          id="plans"
+        >
+          <div>
+            <p className={eyebrowClass}>Plan and reporting</p>
+            <h2 className={sectionTitleClass}>{homepage.plan.title}</h2>
+            <p className={sectionBodyClass}>{homepage.plan.description}</p>
+          </div>
+          <div className="grid grid-cols-2 gap-[14px] max-[1100px]:grid-cols-1">
+            {homepage.plan.features.map((feature) => (
+              <article
+                className="rounded-[8px] border border-[#dde2db] bg-[#f1f3ee] p-[18px]"
+                key={feature.title}
+              >
+                <strong className="text-[1.05rem]">{feature.title}</strong>
+                <p className="mt-[10px] leading-[1.65] text-[#576057]">
+                  {feature.description}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="grid grid-cols-1 gap-[18px] rounded-[8px] border border-[#d7dbd4] bg-[linear-gradient(180deg,rgba(17,23,18,0.12),rgba(17,23,18,0.34)),url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center p-6 text-[#f7f7f3] max-[760px]:px-4">
+          <p className={eyebrowClass}>Ready to use it</p>
+          <h2 className="mt-[10px] text-[clamp(1.9rem,3vw,3.4rem)] leading-[1.04]">
+            {homepage.cta.title}
+          </h2>
+          <p className="mt-[18px] max-w-[650px] text-[1.08rem] leading-[1.7] text-[rgba(247,247,243,0.82)]">
+            {homepage.cta.description}
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <a className={primaryActionClass} href="/auth">
+              Open login
+            </a>
+            <a
+              className={secondaryActionClass}
+              href={homepageDataUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View product data
+            </a>
+          </div>
+        </section>
       </section>
     </main>
   );

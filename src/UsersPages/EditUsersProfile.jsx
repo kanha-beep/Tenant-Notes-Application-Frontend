@@ -2,23 +2,22 @@ import React, { useEffect, useState } from "react";
 import api from "../init/instance.js";
 import { useNavigate, useParams } from "react-router-dom";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";
-import BackToProfileButton from "../Components/Buttons/BackToProfileButton.jsx"
+import BackToProfileButton from "../Components/Buttons/BackToProfileButton.jsx";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
 import { createToast, flashToast } from "../utils/toast.js";
+import { cn, uiTokens } from "../utils/uiTokens.js";
+
 export default function EditUsersProfile() {
-  // const [owner, setOwner] = useState({});
-  const { userId } = useParams(); // Get note ID from URL
-  const [msg, setMsg] = useState(""); // Error message
+  const { userId } = useParams();
+  const [msg, setMsg] = useState("");
   const token = localStorage.getItem("tokens");
-  const [data, setData] = useState({ usernameL: "", password: "" }); // Form data
+  const [data, setData] = useState({ usernameL: "", password: "" });
   const navigate = useNavigate();
-  //get user
+
   useEffect(() => {
     const currentOwner = async () => {
       try {
-        // console.log("tokens for owner AllNotes:", token);
         if (!token) {
-          console.log("No token for Owner AllNotes");
           return;
         }
         const res = await api.get(`/users/${userId}`, {
@@ -26,7 +25,6 @@ export default function EditUsersProfile() {
             Authorization: `Bearer ${token}`,
           },
         });
-        // console.log("current owner AllNotes: ", res.data);
         setData(res.data);
       } catch (e) {
         console.log("current AllNotes: ", e.response.data);
@@ -34,9 +32,11 @@ export default function EditUsersProfile() {
     };
     currentOwner();
   }, [token]);
+
   const handleChange = (e) => {
     setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
   const handleEditUser = async (e) => {
     e.preventDefault();
     try {
@@ -45,7 +45,7 @@ export default function EditUsersProfile() {
       });
       console.log("Edited User: ", res.data);
       flashToast("Profile updated successfully.", "success");
-      navigate(`/users/${userId}`); // Redirect to notes page
+      navigate(`/users/${userId}`);
     } catch (e) {
       setMsg(createToast(e.response?.data || "Error updating note"));
       if (e.response.status === 404) {
@@ -53,22 +53,22 @@ export default function EditUsersProfile() {
       }
     }
   };
+
   return (
-    <div className="container">
+    <div className="mx-auto max-w-3xl px-4 py-6">
       <Msg msg={msg} setMsg={setMsg} />
-      <h1 className="text-center">Edit Profile</h1>
-      <div className="row mx-auto">
-        <form
-          onSubmit={handleEditUser}
-          className="col-12 col-lg-6 col-sm-8 mx-auto"
-        >
+      <h1 className="mb-6 text-center text-3xl font-bold text-slate-900">
+        Edit Profile
+      </h1>
+      <div className="mx-auto max-w-xl">
+        <form onSubmit={handleEditUser} className={cn(uiTokens.panel, "space-y-4")}>
           <input
             type="text"
             name="username"
             placeholder="username of User"
             value={data.username}
             onChange={handleChange}
-            className="my-2 p-1 form-control"
+            className={uiTokens.input}
           />
           <input
             type="text"
@@ -76,7 +76,7 @@ export default function EditUsersProfile() {
             placeholder="password"
             value={data.password}
             onChange={handleChange}
-            className="my-2 p-1 form-control"
+            className={uiTokens.input}
           />
           <UpdateButton />
         </form>

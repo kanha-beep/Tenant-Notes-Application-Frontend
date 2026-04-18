@@ -1,5 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AllNotesFinal from "./NotesPages/AllNotesFinal.jsx";
@@ -107,7 +105,9 @@ function App() {
           </Route>
           <Route
             path="/auth"
-            element={<Auth setIsLoggedIn={setIsLoggedIn} setMsg={setMsg} msg={msg} />}
+            element={
+              <Auth setIsLoggedIn={setIsLoggedIn} setMsg={setMsg} msg={msg} />
+            }
           />
           <Route
             path="/logout"
