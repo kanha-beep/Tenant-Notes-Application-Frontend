@@ -6,7 +6,7 @@ export default function Health() {
 
   const checkHealth = async () => {
     try {
-      const res = await api.get("/health");
+      const res = await api.get("/api/health");
       setStatus(res.data);
     } catch (err) {
       setStatus("Error: " + err.message);

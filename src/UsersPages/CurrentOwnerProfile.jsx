@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../init/instance.js";
 import GoHomeButton from "../Components/Buttons/GoHomeButton.jsx";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
@@ -7,7 +7,7 @@ import { createToast } from "../utils/toast.js";
 import { cn, uiTokens } from "../utils/uiTokens.js";
 
 export default function CurrentOwnerProfile() {
-  const { userId } = useParams();
+  // const { userId } = useParams();
   const [owner, setOwner] = useState({});
   const navigate = useNavigate();
   const token = localStorage.getItem("tokens");

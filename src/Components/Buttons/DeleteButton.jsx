@@ -16,6 +16,7 @@ export default function DeleteButton({
         },
       });
       navigate("/admin/users");
+      return;
     }
 
     if (userRole === "admin" && toShowAdmin === "notes") {
@@ -25,6 +26,7 @@ export default function DeleteButton({
         },
       });
       navigate("/notes");
+      return;
     }
 
     if (userRole === "admin") {

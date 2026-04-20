@@ -8,6 +8,7 @@ import { cn, uiTokens } from "../utils/uiTokens.js";
 export default function EditUsers({ token }) {
   const navigate = useNavigate();
   const { userId } = useParams();
+  const authToken = token || localStorage.getItem("tokens");
   const [data, setData] = useState({
     username: "",
     email: "",
@@ -19,7 +20,7 @@ export default function EditUsers({ token }) {
       try {
         const res = await api.get(`/admin/users/${userId}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${authToken}`,
           },
         });
         setData(res.data);
@@ -28,7 +29,7 @@ export default function EditUsers({ token }) {
       }
     };
     getUser();
-  }, []);
+  }, [authToken, userId]);
 
   const handleChange = (e) => {
     setData((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -39,7 +40,7 @@ export default function EditUsers({ token }) {
       e.preventDefault();
       const res = await api.patch(`/admin/users/${userId}/edit`, data, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
         },
       });
       console.log("Updated User: ", res.data);

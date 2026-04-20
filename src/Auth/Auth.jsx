@@ -54,15 +54,13 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
       localStorage.setItem("tokens", token);
       localStorage.setItem("tenant", userForm.tenant);
       localStorage.setItem("role", role);
-      localStorage.setItem("userId: ", res?.data?._id);
+      localStorage.setItem("userId", res?.data?._id);
       setIsLoggedIn(true);
       setMsg(createToast("Logged in successfully.", "success"));
       if (role === "admin") navigate("/admin/dashboard");
       else navigate("/notes");
     } catch (e) {
-      if ([401, 402, 403].includes(e?.response?.status)) {
-        setMsg(createToast(e.response?.data?.message, "error"));
-      }
+      setMsg(createToast(e?.response?.data?.message || "Authentication failed.", "error"));
     } finally {
       setIsSubmitting(false);
     }

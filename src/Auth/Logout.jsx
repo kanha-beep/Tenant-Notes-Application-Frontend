@@ -7,6 +7,8 @@ export default function Logout({ setIsLoggedIn, setIsPage }) {
     localStorage.removeItem("tokens");
     localStorage.removeItem("tenant");
     localStorage.removeItem("role")
+    localStorage.removeItem("userId")
+    localStorage.removeItem("toShowAdmin")
     setIsLoggedIn(false);
     setIsPage(false);
     console.log("Offline if no token Logout.jsx");

@@ -18,4 +18,18 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401) {
+      localStorage.removeItem("tokens");
+      localStorage.removeItem("tenant");
+      localStorage.removeItem("role");
+      localStorage.removeItem("userId");
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export default api;

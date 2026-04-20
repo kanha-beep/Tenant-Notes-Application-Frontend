@@ -35,7 +35,10 @@ export default function NewUsersCards() {
         },
       });
       console.log("User created successfully:", res.data);
-      flashToast("User created successfully.", "success");
+      const passwordMessage = res.data?.temporaryPassword
+        ? ` Temporary password: ${res.data.temporaryPassword}`
+        : "";
+      flashToast(`User created successfully.${passwordMessage}`, "success");
       navigate("/admin/users");
     } catch (error) {
       setMsg(

@@ -11,7 +11,7 @@ export default function EditUsersProfile() {
   const { userId } = useParams();
   const [msg, setMsg] = useState("");
   const token = localStorage.getItem("tokens");
-  const [data, setData] = useState({ usernameL: "", password: "" });
+  const [data, setData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +25,10 @@ export default function EditUsersProfile() {
             Authorization: `Bearer ${token}`,
           },
         });
-        setData(res.data);
+        setData({
+          username: res.data?.user?.username || "",
+          password: "",
+        });
       } catch (e) {
         console.log("current AllNotes: ", e.response.data);
       }
@@ -47,10 +50,7 @@ export default function EditUsersProfile() {
       flashToast("Profile updated successfully.", "success");
       navigate(`/users/${userId}`);
     } catch (e) {
-      setMsg(createToast(e.response?.data || "Error updating note"));
-      if (e.response.status === 404) {
-        return setMsg(createToast(e.response.data.message));
-      }
+      setMsg(createToast(e.response?.data?.message || "Error updating profile"));
     }
   };
 
