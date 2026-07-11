@@ -10,21 +10,13 @@ import { cn, uiTokens } from "../utils/uiTokens.js";
 export default function EditUsersProfile() {
   const { userId } = useParams();
   const [msg, setMsg] = useState("");
-  const token = localStorage.getItem("tokens");
   const [data, setData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
 
   useEffect(() => {
     const currentOwner = async () => {
       try {
-        if (!token) {
-          return;
-        }
-        const res = await api.get(`/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await api.get(`/users/${userId}`);
         setData({
           username: res.data?.user?.username || "",
           password: "",
@@ -34,7 +26,7 @@ export default function EditUsersProfile() {
       }
     };
     currentOwner();
-  }, [token]);
+  }, [userId]);
 
   const handleChange = (e) => {
     setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -43,9 +35,7 @@ export default function EditUsersProfile() {
   const handleEditUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.patch(`/users/${userId}/edit`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.patch(`/users/${userId}/edit`, data);
       console.log("Edited User: ", res.data);
       flashToast("Profile updated successfully.", "success");
       navigate(`/users/${userId}`);

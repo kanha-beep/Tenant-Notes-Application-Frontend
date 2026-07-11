@@ -5,7 +5,6 @@ import AllUsersCards from "./UsersCards/AllUsersCards.jsx";
 
 export default function AllUsers({
   navigate,
-  token,
   setUsers,
   filterTenant,
   setFilterUsers,
@@ -20,11 +19,7 @@ export default function AllUsers({
 
     const getAllUsers = async () => {
       try {
-        const res = await api.get("/admin/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await api.get("/admin/users");
         setUsers(res.data);
         setFilterUsers(res.data?.users);
         setToShowAdmin("users");
@@ -37,13 +32,13 @@ export default function AllUsers({
     intervalId = setInterval(getAllUsers, 30000);
 
     return () => clearInterval(intervalId);
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     if (!filterUsers) return;
     const filtered = filterUsers.filter((n) => n.tenant?.name === filterTenant);
     setFilterUsers(filtered);
-  }, [filterTenant, token]);
+  }, [filterTenant]);
 
   return (
     <div className="mt-4">

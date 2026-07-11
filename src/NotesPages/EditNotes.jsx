@@ -9,23 +9,20 @@ import { cn, uiTokens } from "../utils/uiTokens.js";
 export default function EditNotes() {
   const { noteId } = useParams();
   const navigate = useNavigate();
-  const token = localStorage.getItem("tokens");
   const [msg, setMsg] = useState("");
   const [data, setData] = useState({ title: "", content: "" });
 
   useEffect(() => {
     const fetchNote = async () => {
       try {
-        const res = await api.get(`/notes/${noteId}/edit`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get(`/notes/${noteId}/edit`);
         setData(res.data);
       } catch (e) {
         setMsg(createToast(e.response?.data?.message || "Error fetching note"));
       }
     };
     fetchNote();
-  }, [noteId, token]);
+  }, [noteId]);
 
   const handleChange = (e) => {
     setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -34,9 +31,7 @@ export default function EditNotes() {
   const handleEditNote = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.patch(`/notes/${noteId}/edit`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.patch(`/notes/${noteId}/edit`, data);
       console.log("Edited Note: ", res.data);
       flashToast("Note updated successfully.", "success");
       navigate(`/notes/${noteId}`);

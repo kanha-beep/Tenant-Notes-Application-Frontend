@@ -5,15 +5,10 @@ import Right from "./Right";
 
 export default function Dashboard() {
   const [details, setDetails] = useState(null);
-  const token = localStorage.getItem("tokens");
 
   const getAllDetails = async () => {
     try {
-      const res = await api.get("/admin/dashboard", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.get("/admin/dashboard");
       setDetails(res.data);
     } catch (e) {
       console.log("error", e.response.data);

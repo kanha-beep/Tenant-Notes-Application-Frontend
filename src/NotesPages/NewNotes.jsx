@@ -10,7 +10,6 @@ export default function NewNotes() {
   const userRole = localStorage.getItem("role");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
-  const token = localStorage.getItem("tokens");
   const [data, setData] = useState({ title: "", content: "", user: "" });
 
   const handleChange = (e) => {
@@ -20,11 +19,7 @@ export default function NewNotes() {
   const handleCreateNote = async (e) => {
     try {
       e.preventDefault();
-      const res = await api.post("/notes/new", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.post("/notes/new", data);
       console.log("NewNotes: ........", res.data);
       flashToast("Note created successfully.", "success");
       navigate("/notes");

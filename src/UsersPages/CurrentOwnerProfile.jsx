@@ -10,27 +10,19 @@ export default function CurrentOwnerProfile() {
   // const { userId } = useParams();
   const [owner, setOwner] = useState({});
   const navigate = useNavigate();
-  const token = localStorage.getItem("tokens");
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
     const currentOwner = async () => {
       try {
-        if (!token) {
-          return;
-        }
-        const res = await api.get(`/users/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await api.get(`/users/`);
         setOwner(res.data.user);
       } catch (e) {
         setMsg(createToast(e.response?.data?.message || "Error loading profile"));
       }
     };
     currentOwner();
-  }, [token]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]">

@@ -3,7 +3,6 @@
 import AllNotesCards from "../NotesPages/NotesCards/AllNotesCards.jsx";
 
 export default function AllNotes({ toShowAdmin, filterNotes, setFilterNotes }) {
-  const token = localStorage.getItem("tokens");
   const userRole = localStorage.getItem("role");
 
   return (
@@ -19,7 +18,6 @@ export default function AllNotes({ toShowAdmin, filterNotes, setFilterNotes }) {
             <AllNotesCards
               key={n._id}
               n={n}
-              token={token}
               setFilterNotes={setFilterNotes}
               userRole={userRole}
               toShowAdmin={toShowAdmin}

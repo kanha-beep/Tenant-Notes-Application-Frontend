@@ -14,7 +14,6 @@ export default function AllNotesFinal() {
   const navigate = useNavigate();
   const location = useLocation();
   const [owner, setOwner] = useState([]);
-  const token = localStorage.getItem("tokens");
   const userRole = localStorage.getItem("role");
   const [users, setUsers] = useState([]);
   const [notes, setNotes] = useState([]);
@@ -98,7 +97,6 @@ export default function AllNotesFinal() {
 
         <div className="mb-8">
           <PageButtons
-            token={token}
             setFilterNotes={setFilterNotes}
             userRole={userRole}
             setUsers={setUsers}
@@ -113,7 +111,6 @@ export default function AllNotesFinal() {
           navigate={navigate}
           owner={owner}
           setOwner={setOwner}
-          token={token}
           users={users}
           setUsers={setUsers}
           msg={msg}

@@ -1,19 +1,25 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import api from "../init/instance.js";
 
-export default function Logout({ setIsLoggedIn, setIsPage }) {
+export default function Logout({ setIsLoggedIn }) {
   const navigate = useNavigate();
   useEffect(() => {
-    localStorage.removeItem("tokens");
-    localStorage.removeItem("tenant");
-    localStorage.removeItem("role")
-    localStorage.removeItem("userId")
-    localStorage.removeItem("toShowAdmin")
-    setIsLoggedIn(false);
-    setIsPage(false);
-    console.log("Offline if no token Logout.jsx");
-    console.log("logout url");
-    navigate(`/auth`);
+    const logout = async () => {
+      try {
+        await api.post("/auth/logout");
+      } catch (error) {
+        console.log("Logout request failed", error?.response?.data?.message);
+      } finally {
+        localStorage.removeItem("role");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("toShowAdmin");
+        setIsLoggedIn(false);
+        navigate(`/auth`);
+      }
+    };
+
+    logout();
   }, []);
   return null;
 }

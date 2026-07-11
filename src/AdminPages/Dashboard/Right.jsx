@@ -64,7 +64,7 @@ export default function Right({ details }) {
             <div>
               <h6 className="mb-2 text-white/70">Total Notes</h6>
               <h2 className="mb-0 text-3xl font-bold">
-                {details?.totalNotes ?? 0}
+                {details?.kpis?.totalNotes ?? 0}
               </h2>
             </div>
             <div className="rounded-full bg-white/20 p-3 text-lg font-semibold">
@@ -91,7 +91,7 @@ export default function Right({ details }) {
             <div>
               <h6 className="mb-2 text-white/70">Total Users</h6>
               <h2 className="mb-0 text-3xl font-bold">
-                {details?.totalUsers ?? 0}
+                {details?.kpis?.totalUsers ?? 0}
               </h2>
             </div>
             <div className="rounded-full bg-white/20 p-3 text-lg font-semibold">
@@ -146,11 +146,11 @@ export default function Right({ details }) {
                 <div>
                   <h6 className="mb-1 font-semibold">Active Sessions</h6>
                   <small className="text-slate-500">
-                    Users currently online
+                  Users currently online
                   </small>
                 </div>
                 <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">
-                  {details?.totalUsers ?? 0}
+                  {details?.usage?.seatsUsed ?? 0}
                 </span>
               </div>
               <div className="flex items-center justify-between rounded-2xl bg-slate-100 p-3">
@@ -159,7 +159,7 @@ export default function Right({ details }) {
                   <small className="text-slate-500">Latest user actions</small>
                 </div>
                 <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-700">
-                  {details?.totalNotes ?? 0}
+                  {details?.activity?.length ?? 0}
                 </span>
               </div>
             </div>
@@ -167,13 +167,38 @@ export default function Right({ details }) {
 
           <div className="rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-              Tenant admins
+              AI tenant operations assistant
             </p>
-            {details?.allAdmins?.map((admin) => (
-              <ul key={admin?._id} className="mb-2 list-disc pl-5 text-slate-700">
-                <li>{admin?.email}</li>
-              </ul>
-            ))}
+            <div className="space-y-3 text-sm text-slate-700">
+              <p>{details?.aiAssistant?.headline || "No workload issues detected."}</p>
+              {details?.aiAssistant?.overloadedMembers?.map((member) => (
+                <div key={member.userId} className="rounded-2xl bg-slate-100 p-3">
+                  <p className="font-semibold">{member.username}</p>
+                  <p className="text-slate-500">{member.reason}</p>
+                </div>
+              ))}
+              {details?.aiAssistant?.followUpDrafts?.slice(0, 2).map((item) => (
+                <div key={item.noteId} className="rounded-2xl border border-slate-200 p-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Draft follow-up
+                  </p>
+                  <p>{item.draft}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
+              SLA and usage
+            </p>
+            <div className="space-y-2 text-sm text-slate-700">
+              <p>SLA compliance: {details?.sla?.complianceRate ?? 0}%</p>
+              <p>Breaches: {details?.sla?.breachCount ?? 0}</p>
+              <p>Plan: {details?.billing?.plan ?? "free"}</p>
+              <p>Seats: {details?.usage?.seatsUsed ?? 0}/{details?.usage?.seatsProvisioned ?? 0}</p>
+              <p>Note usage: {details?.usage?.noteUtilization ?? "0/0"}</p>
+            </div>
           </div>
         </div>
       </div>

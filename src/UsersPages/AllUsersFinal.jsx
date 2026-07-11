@@ -10,7 +10,6 @@ export default function AllUsersFinal() {
   const location = useLocation()
   const navigate = useNavigate();
   const [owner, setOwner] = useState([]);
-  const token = localStorage.getItem("tokens");
   const userRole = localStorage.getItem("role");
   const [users, setUsers] = useState([]);
   const [notes, setNotes] = useState([]);
@@ -49,7 +48,6 @@ export default function AllUsersFinal() {
         
         <div className="mb-8">
           <PageButtons
-            token={token}
             setFilterNotes={setFilterNotes}
             userRole={userRole}
             setUsers={setUsers}

@@ -11,7 +11,6 @@ export default function Notes() {
   const [msg, setMsg] = useState("");
   const { noteId } = useParams();
   const navigate = useNavigate();
-  const token = localStorage.getItem("tokens");
   const [notes, setNotes] = useState(null);
   const [check, setCheck] = useState(false);
   const [feedback, setFeedback] = useState("");
@@ -20,11 +19,7 @@ export default function Notes() {
   useEffect(() => {
     const getOneNotes = async () => {
       try {
-        const res = await api.get(`/notes/${noteId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await api.get(`/notes/${noteId}`);
         setNotes(res.data);
       } catch (e) {
         setMsg(createToast(e.response.data.message));
@@ -69,7 +64,6 @@ export default function Notes() {
             <div key={notes._id} className={cn(uiTokens.panel, "mb-4")}>
               <SingleNotesCards
                 n={notes}
-                token={token}
                 navigate={navigate}
                 noteId={noteId}
                 check={check}

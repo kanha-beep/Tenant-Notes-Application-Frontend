@@ -8,7 +8,6 @@ import { cn, uiTokens } from "../utils/uiTokens.js";
 export default function EditUsers({ token }) {
   const navigate = useNavigate();
   const { userId } = useParams();
-  const authToken = token || localStorage.getItem("tokens");
   const [data, setData] = useState({
     username: "",
     email: "",
@@ -18,18 +17,14 @@ export default function EditUsers({ token }) {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await api.get(`/admin/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+        const res = await api.get(`/admin/users/${userId}`);
         setData(res.data);
       } catch (e) {
         console.log("error in getting user: ", e.response.data);
       }
     };
     getUser();
-  }, [authToken, userId]);
+  }, [userId]);
 
   const handleChange = (e) => {
     setData((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -38,11 +33,7 @@ export default function EditUsers({ token }) {
   const handleEditUsers = async (e) => {
     try {
       e.preventDefault();
-      const res = await api.patch(`/admin/users/${userId}/edit`, data, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const res = await api.patch(`/admin/users/${userId}/edit`, data);
       console.log("Updated User: ", res.data);
       navigate(`/admin/users/${userId}`);
     } catch (e) {

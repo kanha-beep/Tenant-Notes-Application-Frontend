@@ -13,7 +13,7 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
     email: "",
     password: "",
     tenant: "",
-    // role: "",
+    inviteToken: "",
   });
 
   const url = isPage ? "login" : "register";
@@ -28,11 +28,12 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
 
     if (!isPage) {
       try {
-        const res = await api.post(`/auth/${url}`, userForm);
-        console.log("Sign up done: ", res.data.data);
+        await api.post(`/auth/${url}`, userForm);
         setMsg(
           createToast(
-            "Account created successfully. Please log in.",
+            userForm.inviteToken
+              ? "Invite accepted successfully. Please log in."
+              : "Workspace created successfully. Please log in.",
             "success",
           ),
         );
@@ -49,12 +50,9 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
 
     try {
       const res = await api.post(`/auth/${url}`, userForm);
-      const token = res.data.token;
-      const role = res.data.role;
-      localStorage.setItem("tokens", token);
-      localStorage.setItem("tenant", userForm.tenant);
+      const role = res.data.user?.role === "owner" || res.data.user?.role === "admin" ? "admin" : "user";
       localStorage.setItem("role", role);
-      localStorage.setItem("userId", res?.data?._id);
+      localStorage.setItem("userId", res?.data?.user?._id);
       setIsLoggedIn(true);
       setMsg(createToast("Logged in successfully.", "success"));
       if (role === "admin") navigate("/admin/dashboard");
@@ -150,19 +148,14 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
               </label>
 
               <label className="block">
-                <span className={uiTokens.label}>Tenant</span>
-                <select
+                <span className={uiTokens.label}>Workspace</span>
+                <input
                   name="tenant"
                   value={userForm.tenant}
                   onChange={handleChange}
                   className={uiTokens.input}
-                >
-                  <option value="" disabled>
-                    Select
-                  </option>
-                  <option value="acme">Acme</option>
-                  <option value="globex">Globex</option>
-                </select>
+                  placeholder="acme"
+                />
               </label>
             </div>
 
@@ -179,22 +172,17 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
                     onChange={handleChange}
                   />
                 </label>
-
-                {/* <label className="block">
-                  <span className={uiTokens.label}>Role</span>
-                  <select
-                    name="role"
-                    value={userForm.role}
-                    onChange={handleChange}
+                <label className="block">
+                  <span className={uiTokens.label}>Invite Token</span>
+                  <input
+                    type="text"
                     className={uiTokens.input}
-                  >
-                    <option value="" disabled>
-                      Select Role
-                    </option>
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </label> */}
+                    placeholder="Optional for invited users"
+                    name="inviteToken"
+                    value={userForm.inviteToken}
+                    onChange={handleChange}
+                  />
+                </label>
               </div>
             )}
 

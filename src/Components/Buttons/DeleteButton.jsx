@@ -2,7 +2,6 @@ import api from "../../init/instance.js";
 import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function DeleteButton({
-  token,
   n,
   navigate,
   userRole,
@@ -10,31 +9,19 @@ export default function DeleteButton({
 }) {
   const handleDelete = async (id) => {
     if (userRole === "admin" && toShowAdmin === "users") {
-      await api.delete(`/admin/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.delete(`/admin/users/${id}`);
       navigate("/admin/users");
       return;
     }
 
     if (userRole === "admin" && toShowAdmin === "notes") {
-      await api.delete(`/notes/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.delete(`/notes/${id}`);
       navigate("/notes");
       return;
     }
 
     if (userRole === "admin") {
-      await api.delete(`/notes/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.delete(`/notes/${id}`);
       navigate("/notes");
     }
   };

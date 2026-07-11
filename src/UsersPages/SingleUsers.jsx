@@ -10,7 +10,6 @@ import { cn, uiTokens } from "../utils/uiTokens.js";
 export default function SingleUsers() {
   const userRole = localStorage.getItem("role");
   const navigate = useNavigate();
-  const token = localStorage.getItem("tokens");
   const [users, setUsers] = useState(null);
   const [msg, setMsg] = useState("");
   const [noteForm, setNoteForm] = useState({ title: "", content: "" });
@@ -21,11 +20,7 @@ export default function SingleUsers() {
   useEffect(() => {
     const getOneUser = async () => {
       try {
-        const res = await api.get(`/admin/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await api.get(`/admin/users/${userId}`);
         console.log("get one note AllNotes F: ", res.data);
         setUsers(res.data);
       } catch (e) {
@@ -49,19 +44,11 @@ export default function SingleUsers() {
 
     try {
       setIsSubmitting(true);
-      await api.post(
-        "/notes/new",
-        {
-          title: noteForm.title,
-          content: noteForm.content,
-          userEmail: users.email,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await api.post("/notes/new", {
+        title: noteForm.title,
+        content: noteForm.content,
+        userEmail: users.email,
+      });
       flashToast(`Note added for ${users.username}.`, "success");
       setNoteForm({ title: "", content: "" });
       navigate("/notes");
@@ -86,7 +73,6 @@ export default function SingleUsers() {
           {userRole === "admin" && toShowAdmin === "users" && (
             <SingleUsersCards
               users={users}
-              token={token}
               navigate={navigate}
               key={users?._id}
               n={users}

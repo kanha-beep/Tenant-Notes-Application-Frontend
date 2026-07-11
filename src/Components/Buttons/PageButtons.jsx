@@ -5,7 +5,6 @@ import SortButton from "./SortButton.jsx";
 import SearchButton from "./SearchButton.jsx";
 
 export default function PageButtons({
-  token,
   setFilterNotes,
   userRole,
   setFilterUsers,
@@ -21,29 +20,15 @@ export default function PageButtons({
 
   const handlePage = async () => {
     if (userRole === "user") {
-      const res = await api.get(
-        `/notes?page=${page}&search=${search}&sort=${sortBy}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setPage(res.data.page);
-      setTotalPages(res.data.totalPages);
-      setTotalNotes(res.data.totalNotes);
-      setFilterNotes(res.data.userNotes);
+      const res = await api.get(`/notes?page=${page}&search=${search}&sort=${sortBy}`);
+      setPage(res.data.meta.page);
+      setTotalPages(res.data.meta.totalPages);
+      setTotalNotes(res.data.meta.totalItems);
+      setFilterNotes(res.data.items);
     } else {
       try {
         if (toShowAdmin === "users") {
-          const res = await api.get(
-            `/admin/users?page=${page}&search=${search}&sort=${sortBy}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const res = await api.get(`/admin/users?page=${page}&search=${search}&sort=${sortBy}`);
           setPage(res.data.page);
           setTotalPages(res.data.totalPages);
           setTotalUsers(res.data.totalNoOfUsers);
@@ -51,19 +36,12 @@ export default function PageButtons({
           setFilterNotes([]);
           setSearch("");
         } else {
-          const res = await api.get(
-            `/notes?page=${page}&search=${search}&sort=${sortBy}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setPage(res.data.page);
-          setTotalPages(res.data.totalPages);
-          setTotalNotes(res.data.totalNotes);
-          setFilterNotes(res.data.adminNotes);
-          setTotalNotesOfCompany(res?.data?.totalNotesOfCompany);
+          const res = await api.get(`/notes?page=${page}&search=${search}&sort=${sortBy}`);
+          setPage(res.data.meta.page);
+          setTotalPages(res.data.meta.totalPages);
+          setTotalNotes(res.data.meta.totalItems);
+          setFilterNotes(res.data.items);
+          setTotalNotesOfCompany(res?.data?.meta?.totalItems || 0);
         }
       } catch (e) {
         console.log("error in pagination: ", e.response.data);

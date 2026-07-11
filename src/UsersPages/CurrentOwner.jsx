@@ -4,18 +4,13 @@ import ViewButton from "../Components/Buttons/ViewButton.jsx";
 
 export default function CurrentOwner({
   owner,
-  token,
   navigate,
   setOwner,
   isPage,
 }) {
   const currentOwner = async () => {
     try {
-      const res = await api.get("/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.get("/auth/me");
       setOwner(res.data);
     } catch (e) {
       console.log("error Admin", e);

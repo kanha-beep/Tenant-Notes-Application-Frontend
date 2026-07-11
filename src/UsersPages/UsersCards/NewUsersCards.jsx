@@ -14,7 +14,6 @@ export default function NewUsersCards() {
   const toShowAdmin = location?.state || "users";
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
-  const token = localStorage.getItem("tokens");
   const [data, setData] = useState({
     title: "",
     content: "",
@@ -29,11 +28,7 @@ export default function NewUsersCards() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/admin/users/new", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.post("/admin/users/new", data);
       console.log("User created successfully:", res.data);
       const passwordMessage = res.data?.temporaryPassword
         ? ` Temporary password: ${res.data.temporaryPassword}`
