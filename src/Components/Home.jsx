@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const API_BASE =
+  import.meta.env.VITE_JAVA_API_URL?.trim() ||
+  (import.meta.env.PROD
+    ? "https://multi-tenant-java.onrender.com/api"
+    : "http://localhost:3001/api");
 
 const testimonials = [
   {
