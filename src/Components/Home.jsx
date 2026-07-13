@@ -1,10 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-
-const API_BASE =
-  import.meta.env.VITE_JAVA_API_URL?.trim() ||
-  (import.meta.env.PROD
-    ? "https://multi-tenant-java.onrender.com/api"
-    : "http://localhost:3001/api");
+import { API_BASE_URL } from "../init/apiBase";
 
 const testimonials = [
   {
@@ -34,7 +29,7 @@ export default function Home() {
   useEffect(() => {
     const loadHomepage = async () => {
       try {
-        const response = await fetch(`${API_BASE}/homepage`);
+        const response = await fetch(`${API_BASE_URL}/homepage`);
 
         if (!response.ok) {
           throw new Error("Failed to load homepage");

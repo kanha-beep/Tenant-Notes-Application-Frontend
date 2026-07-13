@@ -3,22 +3,27 @@ import { useNavigate } from "react-router-dom";
 import api from "../init/instance.js";
 import GoHomeButton from "../Components/Buttons/GoHomeButton.jsx";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
+import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 import { createToast } from "../utils/toast.js";
 import { cn, uiTokens } from "../utils/uiTokens.js";
 
 export default function CurrentOwnerProfile() {
   // const { userId } = useParams();
-  const [owner, setOwner] = useState({});
+  const [owner, setOwner] = useState(null);
   const navigate = useNavigate();
   const [msg, setMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const currentOwner = async () => {
       try {
+        setIsLoading(true);
         const res = await api.get(`/users/`);
         setOwner(res.data.user);
       } catch (e) {
         setMsg(createToast(e.response?.data?.message || "Error loading profile"));
+      } finally {
+        setIsLoading(false);
       }
     };
     currentOwner();
@@ -36,6 +41,7 @@ export default function CurrentOwnerProfile() {
 
         <div className="flex justify-center">
           <div className="w-full max-w-xl">
+            {isLoading ? <LoadingSpinner size="small" text="Profile loading..." /> : null}
             {owner && (
               <div className={cn(uiTokens.panel, "rounded-[2rem] p-8")}>
                 <div className="mb-4 text-center">

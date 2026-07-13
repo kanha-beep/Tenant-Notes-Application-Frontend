@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import HomePageButton from "../Components/Buttons/HomePageButton.jsx";
 import api from "../init/instance.js";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";
+import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { cn, uiTokens } from "../utils/uiTokens.js";
 
@@ -9,6 +10,7 @@ export default function EditUsers({ token }) {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({
     username: "",
     email: "",
@@ -18,10 +20,13 @@ export default function EditUsers({ token }) {
   useEffect(() => {
     const getUser = async () => {
       try {
+        setIsLoading(true);
         const res = await api.get(`/admin/users/${userId}`);
         setData(res.data);
       } catch (e) {
         console.log("error in getting user: ", e.response.data);
+      } finally {
+        setIsLoading(false);
       }
     };
     getUser();
@@ -50,6 +55,7 @@ export default function EditUsers({ token }) {
       <h1 className="mb-6 text-center text-3xl font-bold text-slate-900">
         Edit Users Here
       </h1>
+      {isLoading ? <LoadingSpinner size="small" text="User loading..." /> : null}
       <div className={cn(uiTokens.panel, "space-y-4")}>
         <form onSubmit={handleEditUsers} className="space-y-4">
           <input

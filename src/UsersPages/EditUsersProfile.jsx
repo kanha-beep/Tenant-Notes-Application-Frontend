@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";
 import BackToProfileButton from "../Components/Buttons/BackToProfileButton.jsx";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
+import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 import { createToast, flashToast } from "../utils/toast.js";
 import { cn, uiTokens } from "../utils/uiTokens.js";
 
@@ -12,11 +13,13 @@ export default function EditUsersProfile() {
   const [msg, setMsg] = useState("");
   const [data, setData] = useState({ username: "", password: "" });
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const currentOwner = async () => {
       try {
+        setIsLoading(true);
         const res = await api.get(`/users/${userId}`);
         setData({
           username: res.data?.user?.username || "",
@@ -24,6 +27,8 @@ export default function EditUsersProfile() {
         });
       } catch (e) {
         console.log("current AllNotes: ", e.response.data);
+      } finally {
+        setIsLoading(false);
       }
     };
     currentOwner();
@@ -55,6 +60,7 @@ export default function EditUsersProfile() {
         Edit Profile
       </h1>
       <div className="mx-auto max-w-xl">
+        {isLoading ? <LoadingSpinner size="small" text="Profile loading..." /> : null}
         <form onSubmit={handleEditUser} className={cn(uiTokens.panel, "space-y-4")}>
           <input
             type="text"

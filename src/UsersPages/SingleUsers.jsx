@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import api from "../init/instance.js";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
+import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 import SingleUsersCards from "./UsersCards/SingleUsersCards.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { createToast, flashToast } from "../utils/toast.js";
@@ -14,22 +15,26 @@ export default function SingleUsers() {
   const [msg, setMsg] = useState("");
   const [noteForm, setNoteForm] = useState({ title: "", content: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { userId, noteId } = useParams();
   const toShowAdmin = localStorage.getItem("toShowAdmin");
 
   useEffect(() => {
     const getOneUser = async () => {
       try {
+        setIsLoading(true);
         const res = await api.get(`/admin/users/${userId}`);
         console.log("get one note AllNotes F: ", res.data);
         setUsers(res.data);
       } catch (e) {
         console.log("error Notes: ", e.response.data.message);
         setMsg(createToast(e.response.data.message));
+      } finally {
+        setIsLoading(false);
       }
     };
     getOneUser();
-  }, []);
+  }, [userId]);
 
   const handleNoteChange = (e) => {
     setNoteForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -73,6 +78,8 @@ export default function SingleUsers() {
         </h2>
       )} */}
       <Msg msg={msg} setMsg={setMsg} />
+
+      {isLoading ? <LoadingSpinner size="small" text="User loading..." /> : null}
 
       <div className="grid gap-6 lg:grid-cols-[1fr_0.95fr]">
         <div className="min-w-0">

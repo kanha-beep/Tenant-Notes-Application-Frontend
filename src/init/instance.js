@@ -1,13 +1,8 @@
 import axios from "axios";
-
-const API_URL =
-  import.meta.env.VITE_JAVA_API_URL?.trim() ||
-  (import.meta.env.PROD
-    ? "https://multi-tenant-java.onrender.com/api"
-    : "http://localhost:3001/api");
+import { API_BASE_URL } from "./apiBase";
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_BASE_URL,
   withCredentials: true,
 });
 

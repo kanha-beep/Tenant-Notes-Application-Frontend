@@ -5,7 +5,7 @@ import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 
 export default function AllUsers({
   navigate,
-  setUsers,
+  // setUsers,
   filterTenant,
   setFilterUsers,
   filterUsers,

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../init/instance.js";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
+import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 import { createToast, flashToast } from "../utils/toast.js";
 import { cn, uiTokens } from "../utils/uiTokens.js";
 
@@ -12,10 +13,12 @@ export default function EditNotes() {
   const [msg, setMsg] = useState("");
   const [data, setData] = useState({ title: "", content: "" });
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchNote = async () => {
       try {
+        setIsLoading(true);
         const res = await api.get(`/notes/${noteId}/edit`);
         setData({
           title: res.data?.title || "",
@@ -23,6 +26,8 @@ export default function EditNotes() {
         });
       } catch (e) {
         setMsg(createToast(e.response?.data?.message || "Error fetching note"));
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchNote();
@@ -57,6 +62,8 @@ export default function EditNotes() {
       <div className="mb-6 text-center">
         <h1 className="py-4 text-3xl font-bold text-slate-900">Edit Note</h1>
       </div>
+
+      {isLoading ? <LoadingSpinner size="small" text="Note loading..." /> : null}
 
       <form onSubmit={handleEditNote} className={cn(uiTokens.panel, "space-y-4")}>
         <input
