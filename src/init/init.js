@@ -3,11 +3,11 @@ import Tenant from "../../../server/Extra/NotesModels/TenantSchema.js"
 const tenantData = [{
     name: "acme",
     plan: "free",
-    noteLimit: 3,
+    noteLimit: 10,
 }, {
     name: "efgh",
     plan: "free",
-    noteLimit: 3,
+    noteLimit: 10,
 }]
 const createTenant = async () => {
     try {

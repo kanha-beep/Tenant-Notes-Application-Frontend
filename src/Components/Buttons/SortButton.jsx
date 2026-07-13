@@ -5,6 +5,7 @@ export default function SortButton({
   toShowAdmin,
   sortBy,
   setSortBy,
+  compact = false,
 }) {
   const getLabel = () => {
     if (userRole === "admin" && toShowAdmin === "users") return "Sort Users";
@@ -28,8 +29,10 @@ export default function SortButton({
   };
 
   return (
-    <div className="lg:order-1">
-      <label className={uiTokens.label}>{getLabel()}</label>
+    <div className={`lg:order-1 ${compact ? "lg:w-56" : ""}`}>
+      <label className={compact ? "mb-2 block text-sm font-semibold text-slate-700 lg:hidden" : uiTokens.label}>
+        {getLabel()}
+      </label>
       <select
         value={sortBy}
         onChange={(e) => setSortBy(e.target.value)}

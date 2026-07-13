@@ -8,6 +8,7 @@ import { cn, uiTokens } from "../utils/uiTokens.js";
 export default function EditUsers({ token }) {
   const navigate = useNavigate();
   const { userId } = useParams();
+  const [isUpdating, setIsUpdating] = useState(false);
   const [data, setData] = useState({
     username: "",
     email: "",
@@ -33,11 +34,14 @@ export default function EditUsers({ token }) {
   const handleEditUsers = async (e) => {
     try {
       e.preventDefault();
+      setIsUpdating(true);
       const res = await api.patch(`/admin/users/${userId}/edit`, data);
       console.log("Updated User: ", res.data);
       navigate(`/admin/users/${userId}`);
     } catch (e) {
       console.log("error NewUsers F:", e.response.data);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -73,7 +77,7 @@ export default function EditUsers({ token }) {
             className={uiTokens.input}
           />
 
-          <UpdateButton userId={userId} />
+          <UpdateButton isLoading={isUpdating} />
         </form>
         <HomePageButton navigate={navigate} />
       </div>

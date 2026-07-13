@@ -31,7 +31,13 @@ export default function NewNotesCards() {
       flashToast("Note created successfully.", "success");
       navigate("/notes");
     } catch (e) {
-      setMsg(createToast(e.response.data));
+      const errorMessage = e.response?.data?.message || e.response?.data || "Failed to create note";
+      if (typeof errorMessage === "string" && errorMessage.toLowerCase().includes("upgrade to pro")) {
+        flashToast("Free plan note limit reached. Please buy a plan.", "error");
+        navigate("/admin/plan");
+        return;
+      }
+      setMsg(createToast(errorMessage));
     }
   };
 

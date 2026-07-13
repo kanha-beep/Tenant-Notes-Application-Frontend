@@ -9,6 +9,10 @@ export default function PageButtons({
   userRole,
   setFilterUsers,
   toShowAdmin,
+  leadingAction = null,
+  setListLoading,
+  setListLoaded,
+  setListTotalCount,
 }) {
   const [totalUsers, setTotalUsers] = useState(0);
   const [page, setPage] = useState(1);
@@ -19,14 +23,16 @@ export default function PageButtons({
   const [totalNotesOfCompany, setTotalNotesOfCompany] = useState(0);
 
   const handlePage = async () => {
-    if (userRole === "user") {
-      const res = await api.get(`/notes?page=${page}&search=${search}&sort=${sortBy}`);
-      setPage(res.data.meta.page);
-      setTotalPages(res.data.meta.totalPages);
-      setTotalNotes(res.data.meta.totalItems);
-      setFilterNotes(res.data.items);
-    } else {
-      try {
+    setListLoading?.(true);
+    try {
+      if (userRole === "user") {
+        const res = await api.get(`/notes?page=${page}&search=${search}&sort=${sortBy}`);
+        setPage(res.data.meta.page);
+        setTotalPages(res.data.meta.totalPages);
+        setTotalNotes(res.data.meta.totalItems);
+        setFilterNotes(res.data.items);
+        setListTotalCount?.(res.data.meta.totalItems || 0);
+      } else {
         if (toShowAdmin === "users") {
           const res = await api.get(`/admin/users?page=${page}&search=${search}&sort=${sortBy}`);
           setPage(res.data.page);
@@ -34,6 +40,7 @@ export default function PageButtons({
           setTotalUsers(res.data.totalNoOfUsers);
           setFilterUsers(res.data.users);
           setFilterNotes([]);
+          setListTotalCount?.(res.data.totalNoOfUsers || 0);
           setSearch("");
         } else {
           const res = await api.get(`/notes?page=${page}&search=${search}&sort=${sortBy}`);
@@ -42,10 +49,14 @@ export default function PageButtons({
           setTotalNotes(res.data.meta.totalItems);
           setFilterNotes(res.data.items);
           setTotalNotesOfCompany(res?.data?.meta?.totalItems || 0);
+          setListTotalCount?.(res?.data?.meta?.totalItems || 0);
         }
-      } catch (e) {
-        console.log("error in pagination: ", e.response.data);
       }
+      setListLoaded?.(true);
+    } catch (e) {
+      console.log("error in pagination: ", e.response?.data);
+    } finally {
+      setListLoading?.(false);
     }
   };
 
@@ -58,23 +69,35 @@ export default function PageButtons({
   }, [toShowAdmin]);
 
   const isUsers = userRole === "admin" && toShowAdmin === "users";
+  const isInlineToolbar = Boolean(leadingAction);
   const totalCount = isUsers ? totalUsers : totalNotes;
   const itemType = isUsers ? "Users" : "Notes";
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div
+        className={
+          isInlineToolbar
+            ? "flex flex-col gap-4 lg:flex-row lg:items-end"
+            : "grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]"
+        }
+      >
+        {leadingAction ? (
+          <div className="lg:order-0 lg:w-auto">{leadingAction}</div>
+        ) : null}
         <SearchButton
           userRole={userRole}
           search={search}
           setSearch={setSearch}
           onSearch={handlePage}
+          compact={isInlineToolbar}
         />
         <SortButton
           userRole={userRole}
           toShowAdmin={toShowAdmin}
           sortBy={sortBy}
           setSortBy={setSortBy}
+          compact={isInlineToolbar}
         />
       </div>
 
@@ -82,7 +105,7 @@ export default function PageButtons({
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="mb-0 text-sm text-slate-600">
-              <span className="mr-2 inline-flex">{isUsers ? "Users" : "Notes"}</span>
+              {/* <span className="mr-2 inline-flex">{isUsers ? "Users" : "Notes"}</span> */}
               Total{" "}
               <span>
                 {itemType.toLowerCase()} {userRole === "user" && totalCount}

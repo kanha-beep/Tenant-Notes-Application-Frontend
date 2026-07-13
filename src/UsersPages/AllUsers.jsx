@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-import api from "../init/instance.js";
 import AllUsersCards from "./UsersCards/AllUsersCards.jsx";
+import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 
 export default function AllUsers({
   navigate,
@@ -11,27 +11,16 @@ export default function AllUsers({
   filterUsers,
   toShowAdmin,
   setToShowAdmin,
+  isLoading,
+  isLoaded,
+  totalCount,
 }) {
   const userRole = localStorage.getItem("role");
 
   useEffect(() => {
-    let intervalId;
-
-    const getAllUsers = async () => {
-      try {
-        const res = await api.get("/admin/users");
-        setUsers(res.data);
-        setFilterUsers(res.data?.users);
-        setToShowAdmin("users");
-      } catch (e) {
-        console.log("error in AllUsers:", e.response);
-      }
-    };
-
-    getAllUsers();
-    intervalId = setInterval(getAllUsers, 30000);
-
-    return () => clearInterval(intervalId);
+    if (userRole === "admin") {
+      setToShowAdmin("users");
+    }
   }, []);
 
   useEffect(() => {
@@ -42,7 +31,16 @@ export default function AllUsers({
 
   return (
     <div className="mt-4">
-      {userRole === "admin" &&
+      {isLoading ? (
+        <LoadingSpinner text="All users loading..." />
+      ) : null}
+      {!isLoading && isLoaded && totalCount === 0 ? (
+        <div className="py-5 text-center">
+          <p className="text-slate-500">No users found.</p>
+        </div>
+      ) : null}
+      {!isLoading &&
+      userRole === "admin" &&
       toShowAdmin === "users" &&
       filterUsers?.length > 0 ? (
         <div className="lg:-mx-2 lg:flex lg:flex-wrap">
@@ -56,11 +54,7 @@ export default function AllUsers({
             />
           ))}
         </div>
-      ) : (
-        <div className="py-5 text-center">
-          <p className="text-slate-500">Loading Users...</p>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 }

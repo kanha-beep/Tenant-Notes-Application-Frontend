@@ -19,36 +19,36 @@ export default function Left() {
           className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
           to="/admin/dashboard"
         >
-          <span>Home</span>
+          {/* <span>Home</span> */}
           <span className="font-medium">Dashboard</span>
         </Link>
         <Link
           className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
           to="/admin/users"
         >
-          <span>Users</span>
+          {/* <span>Users</span> */}
           <span className="font-medium">Users</span>
         </Link>
         <Link
           className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
           to="/notes"
         >
-          <span>Notes</span>
+          {/* <span>Notes</span> */}
           <span className="font-medium">Notes</span>
         </Link>
         <Link
           className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
           to="/admin/plan"
         >
-          <span>Plan</span>
-          <span className="font-medium">Analytics</span>
+          {/* <span>Plan</span> */}
+          <span className="font-medium">Plan</span>
         </Link>
         <Link
           className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
           to="/health"
         >
-          <span>Health</span>
-          <span className="font-medium">Settings</span>
+          {/* <span>Health</span> */}
+          <span className="font-medium">Health</span>
         </Link>
       </nav>
     </div>

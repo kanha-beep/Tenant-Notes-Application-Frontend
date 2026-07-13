@@ -53,7 +53,13 @@ export default function SingleUsers() {
       setNoteForm({ title: "", content: "" });
       navigate("/notes");
     } catch (e) {
-      setMsg(createToast(e.response?.data?.message || "Failed to create note", "error"));
+      const errorMessage = e.response?.data?.message || e.response?.data || "Failed to create note";
+      if (typeof errorMessage === "string" && errorMessage.toLowerCase().includes("upgrade to pro")) {
+        flashToast("Free plan note limit reached. Please buy a plan.", "error");
+        navigate("/admin/plan");
+        return;
+      }
+      setMsg(createToast(errorMessage, "error"));
     } finally {
       setIsSubmitting(false);
     }

@@ -11,12 +11,16 @@ export default function EditNotes() {
   const navigate = useNavigate();
   const [msg, setMsg] = useState("");
   const [data, setData] = useState({ title: "", content: "" });
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const fetchNote = async () => {
       try {
         const res = await api.get(`/notes/${noteId}/edit`);
-        setData(res.data);
+        setData({
+          title: res.data?.title || "",
+          content: res.data?.content || "",
+        });
       } catch (e) {
         setMsg(createToast(e.response?.data?.message || "Error fetching note"));
       }
@@ -31,12 +35,19 @@ export default function EditNotes() {
   const handleEditNote = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.patch(`/notes/${noteId}/edit`, data);
+      setIsUpdating(true);
+      const payload = {
+        title: data.title,
+        content: data.content,
+      };
+      const res = await api.patch(`/notes/${noteId}/edit`, payload);
       console.log("Edited Note: ", res.data);
       flashToast("Note updated successfully.", "success");
       navigate(`/notes/${noteId}`);
     } catch (e) {
       setMsg(createToast(e.response?.data?.message || "Error updating note"));
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -66,7 +77,7 @@ export default function EditNotes() {
           rows="4"
           required
         />
-        <UpdateButton />
+        <UpdateButton isLoading={isUpdating} />
       </form>
 
       <div className="mt-6 text-center">

@@ -5,12 +5,19 @@ export default function SearchButton({
   search,
   setSearch,
   onSearch,
+  compact = false,
 }) {
   return (
-    <div className="lg:order-2">
-      <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_10rem]">
+    <div className={compact ? "min-w-0 flex-1 lg:order-1" : "lg:order-2"}>
+      <div
+        className={
+          compact
+            ? "grid gap-3 lg:grid-cols-[minmax(0,1fr)_8.5rem]"
+            : "grid gap-3 sm:grid-cols-[minmax(0,1fr)_10rem]"
+        }
+      >
         <div>
-          <label className={uiTokens.label}>
+          <label className={compact ? "mb-2 block text-sm font-semibold text-slate-700 lg:hidden" : uiTokens.label}>
             {userRole === "admin" ? "Search Users" : "Search Notes"}
           </label>
           <input

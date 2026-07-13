@@ -22,6 +22,9 @@ export default function AllUsersFinal() {
   const [toShowAdmin, setToShowAdmin] = useState(() => {
     return localStorage.getItem("toShowAdmin") || "users";
   });
+  const [isListLoading, setIsListLoading] = useState(false);
+  const [isListLoaded, setIsListLoaded] = useState(false);
+  const [listTotalCount, setListTotalCount] = useState(0);
   console.log("what is got: ", toShowAdmin)
   console.log(location.state, ": admin .....");
   useEffect(() => {
@@ -42,9 +45,11 @@ export default function AllUsersFinal() {
           </div>
         </div> */}
         
-        <div className="mb-8">
-          <NewButton navigate={navigate} userRole={userRole} toShowAdmin={toShowAdmin}/>
-        </div>
+        {!(userRole === "admin" && toShowAdmin === "users") ? (
+          <div className="mb-8">
+            <NewButton navigate={navigate} userRole={userRole} toShowAdmin={toShowAdmin} />
+          </div>
+        ) : null}
         
         <div className="mb-8">
           <PageButtons
@@ -56,6 +61,17 @@ export default function AllUsersFinal() {
             toShowAdmin={toShowAdmin}
             setToShowAdmin={setToShowAdmin}
             setFilterUsers={setFilterUsers}
+            leadingAction={
+              <NewButton
+                navigate={navigate}
+                userRole={userRole}
+                toShowAdmin={toShowAdmin}
+                compact
+              />
+            }
+            setListLoading={setIsListLoading}
+            setListLoaded={setIsListLoaded}
+            setListTotalCount={setListTotalCount}
           />
         </div>
         
@@ -63,7 +79,6 @@ export default function AllUsersFinal() {
           navigate={navigate}
           owner={owner}
           setOwner={setOwner}
-          token={token}
           users={users}
           setUsers={setUsers}
           msg={msg}
@@ -76,6 +91,9 @@ export default function AllUsersFinal() {
           setIsPage={() => {}}
           toShowAdmin={toShowAdmin}
           setToShowAdmin={setToShowAdmin}
+          isLoading={isListLoading}
+          isLoaded={isListLoaded}
+          totalCount={listTotalCount}
         />
       </div>
       

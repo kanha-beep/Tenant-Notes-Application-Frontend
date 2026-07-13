@@ -1,6 +1,6 @@
 import { cn, uiTokens } from "../../utils/uiTokens.js";
 
-export default function NewButton({ navigate, userRole, toShowAdmin }) {
+export default function NewButton({ navigate, userRole, toShowAdmin, compact = false }) {
   const getButtonText = () => {
     if (userRole === "admin" && toShowAdmin === "users") return "Add User";
     if (userRole === "admin" && toShowAdmin === "notes") return "Add Note";
@@ -8,10 +8,14 @@ export default function NewButton({ navigate, userRole, toShowAdmin }) {
   };
 
   return (
-    <div className="col-12 col-md-6 col-lg-4 order-lg-3 mb-3">
+    <div className={compact ? "" : "col-12 col-md-6 col-lg-4 order-lg-3 mb-3"}>
       {userRole !== "user" && (
         <button
-          className={cn(uiTokens.buttonBase, uiTokens.buttonPrimary, "w-50")}
+          className={cn(
+            uiTokens.buttonBase,
+            uiTokens.buttonPrimary,
+            compact ? "w-full lg:w-auto whitespace-nowrap" : "w-50"
+          )}
           onClick={() => {
             if (userRole === "admin") {
               if (toShowAdmin === "users") navigate(`/admin/users/new`);

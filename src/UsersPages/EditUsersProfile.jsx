@@ -11,6 +11,7 @@ export default function EditUsersProfile() {
   const { userId } = useParams();
   const [msg, setMsg] = useState("");
   const [data, setData] = useState({ username: "", password: "" });
+  const [isUpdating, setIsUpdating] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,12 +36,15 @@ export default function EditUsersProfile() {
   const handleEditUser = async (e) => {
     e.preventDefault();
     try {
+      setIsUpdating(true);
       const res = await api.patch(`/users/${userId}/edit`, data);
       console.log("Edited User: ", res.data);
       flashToast("Profile updated successfully.", "success");
       navigate(`/users/${userId}`);
     } catch (e) {
       setMsg(createToast(e.response?.data?.message || "Error updating profile"));
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -68,7 +72,7 @@ export default function EditUsersProfile() {
             onChange={handleChange}
             className={uiTokens.input}
           />
-          <UpdateButton />
+          <UpdateButton isLoading={isUpdating} />
         </form>
       </div>
       <BackToProfileButton navigate={navigate} usersId={userId} />

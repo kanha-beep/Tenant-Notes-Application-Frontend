@@ -10,9 +10,12 @@ import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function Right({ details }) {
   const [value, setValue] = useState(new Date());
+  const [isDownloadingUsers, setIsDownloadingUsers] = useState(false);
+  const [isDownloadingNotes, setIsDownloadingNotes] = useState(false);
 
   const downloadUsers = async () => {
     try {
+      setIsDownloadingUsers(true);
       const res = await api.get("/admin/users/reports");
       let csvContent = "data:text/csv;charset=utf-8,";
       const row = res?.data?.split("\n");
@@ -29,11 +32,14 @@ export default function Right({ details }) {
     } catch (e) {
       console.log("error download: ", e?.response?.data?.message);
       alert(e?.response?.data?.message);
+    } finally {
+      setIsDownloadingUsers(false);
     }
   };
 
   const downloadNotes = async () => {
     try {
+      setIsDownloadingNotes(true);
       const res = await api.get("/notes/reports");
       const csvContent = "data:text/csv;charset=utf-8," + res?.data;
       const encodeUri = encodeURI(csvContent);
@@ -45,6 +51,8 @@ export default function Right({ details }) {
       document.body.removeChild(link);
     } catch (e) {
       alert(e?.response?.data?.message);
+    } finally {
+      setIsDownloadingNotes(false);
     }
   };
 
@@ -79,9 +87,10 @@ export default function Right({ details }) {
                 "border border-white/25 bg-white/10 px-3 py-2 text-white hover:bg-white/20"
               )}
               onClick={downloadNotes}
+              disabled={isDownloadingNotes}
               type="button"
             >
-              Download Notes
+              {isDownloadingNotes ? "Download Notes..." : "Download Notes"}
             </button>
           </div>
         </div>
@@ -106,9 +115,10 @@ export default function Right({ details }) {
                 "border border-white/25 bg-white/10 px-3 py-2 text-white hover:bg-white/20"
               )}
               onClick={downloadUsers}
+              disabled={isDownloadingUsers}
               type="button"
             >
-              Download All Users
+              {isDownloadingUsers ? "Download All Users..." : "Download All Users"}
             </button>
           </div>
         </div>

@@ -1,9 +1,134 @@
-/* .alert-danger {
-  opacity: 0; 
-  max-height: 0;
-  transition: max-height 5s ease-in-out, opacity 5s ease-in-out;
+.plan-shell {
+  background:
+    radial-gradient(circle at top left, rgba(125, 211, 252, 0.28), transparent 30%),
+    radial-gradient(circle at top right, rgba(251, 191, 36, 0.18), transparent 26%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
 }
-.alert-danger.show {
-  max-height: 10rem;
-  opacity: 1;
-} */
+
+.plan-hero {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)),
+    linear-gradient(135deg, #eff6ff 0%, #ecfeff 100%);
+  backdrop-filter: blur(16px);
+}
+
+.plan-hero-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(20px);
+  opacity: 0.65;
+}
+
+.plan-hero-glow-one {
+  top: -2rem;
+  right: 8%;
+  height: 10rem;
+  width: 10rem;
+  background: rgba(14, 165, 233, 0.16);
+}
+
+.plan-hero-glow-two {
+  bottom: -1rem;
+  left: 18%;
+  height: 8rem;
+  width: 8rem;
+  background: rgba(250, 204, 21, 0.15);
+}
+
+.plan-kicker {
+  display: inline-flex;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #334155;
+}
+
+.plan-stat-card,
+.plan-info-card,
+.plan-summary-card {
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+}
+
+.plan-stat-card {
+  border-radius: 1.35rem;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 14px 32px rgba(148, 163, 184, 0.12);
+}
+
+.plan-stat-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.plan-stat-value {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #020617;
+}
+
+.plan-summary-card {
+  border-radius: 1.7rem;
+  padding: 1.5rem;
+  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.1);
+}
+
+.plan-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+  padding-top: 0.9rem;
+}
+
+.plan-summary-row:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.plan-form-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.84)),
+    linear-gradient(160deg, #f8fafc 0%, #eff6ff 100%);
+}
+
+.plan-info-card {
+  border-radius: 1.45rem;
+  padding: 1.2rem;
+  box-shadow: 0 14px 32px rgba(148, 163, 184, 0.1);
+}
+
+.plan-info-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0f172a;
+}
+
+.plan-info-copy {
+  margin-top: 0.7rem;
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: #475569;
+}
+
+@media (max-width: 768px) {
+  .plan-summary-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

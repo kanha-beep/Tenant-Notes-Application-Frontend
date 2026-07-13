@@ -20,6 +20,9 @@ export default function AllNotesFinal() {
   const [filterNotes, setFilterNotes] = useState([]);
   const [mode, setMode] = useState(false);
   const [toShowAdmin, setToShowAdmin] = useState(location.state || "notes");
+  const [isListLoading, setIsListLoading] = useState(false);
+  const [isListLoaded, setIsListLoaded] = useState(false);
+  const [listTotalCount, setListTotalCount] = useState(0);
 
   useEffect(() => {
     if (toShowAdmin) localStorage.setItem("toShowAdmin", toShowAdmin);
@@ -88,14 +91,6 @@ export default function AllNotesFinal() {
         </div>
 
         <div className="mb-8">
-          <NewButton
-            navigate={navigate}
-            userRole={userRole}
-            toShowAdmin={toShowAdmin}
-          />
-        </div>
-
-        <div className="mb-8">
           <PageButtons
             setFilterNotes={setFilterNotes}
             userRole={userRole}
@@ -104,6 +99,17 @@ export default function AllNotesFinal() {
             filterNotes={filterNotes}
             toShowAdmin={toShowAdmin}
             setToShowAdmin={setToShowAdmin}
+            leadingAction={
+              <NewButton
+                navigate={navigate}
+                userRole={userRole}
+                toShowAdmin={toShowAdmin}
+                compact
+              />
+            }
+            setListLoading={setIsListLoading}
+            setListLoaded={setIsListLoaded}
+            setListTotalCount={setListTotalCount}
           />
         </div>
 
@@ -122,6 +128,9 @@ export default function AllNotesFinal() {
           setIsPage={() => {}}
           toShowAdmin={toShowAdmin}
           setToShowAdmin={setToShowAdmin}
+          isLoading={isListLoading}
+          isLoaded={isListLoaded}
+          totalCount={listTotalCount}
         />
       </div>
     </div>

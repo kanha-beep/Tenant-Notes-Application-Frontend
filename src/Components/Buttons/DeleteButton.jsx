@@ -1,3 +1,4 @@
+import { useState } from "react";
 import api from "../../init/instance.js";
 import { cn, uiTokens } from "../../utils/uiTokens.js";
 
@@ -7,22 +8,34 @@ export default function DeleteButton({
   userRole,
   toShowAdmin,
 }) {
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleDelete = async (id) => {
-    if (userRole === "admin" && toShowAdmin === "users") {
-      await api.delete(`/admin/users/${id}`);
-      navigate("/admin/users");
+    if (isDeleting || !id) {
       return;
     }
 
-    if (userRole === "admin" && toShowAdmin === "notes") {
-      await api.delete(`/notes/${id}`);
-      navigate("/notes");
-      return;
-    }
+    try {
+      setIsDeleting(true);
 
-    if (userRole === "admin") {
-      await api.delete(`/notes/${id}`);
-      navigate("/notes");
+      if (userRole === "admin" && toShowAdmin === "users") {
+        await api.delete(`/admin/users/${id}`);
+        navigate("/admin/users");
+        return;
+      }
+
+      if (userRole === "admin" && toShowAdmin === "notes") {
+        await api.delete(`/notes/${id}`);
+        navigate("/notes");
+        return;
+      }
+
+      if (userRole === "admin") {
+        await api.delete(`/notes/${id}`);
+        navigate("/notes");
+      }
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -32,8 +45,10 @@ export default function DeleteButton({
         <button
           className={cn(uiTokens.buttonBase, uiTokens.buttonDanger, "px-3 py-2")}
           onClick={() => handleDelete(n?._id)}
+          disabled={isDeleting}
+          type="button"
         >
-          Delete
+          {isDeleting ? "Delete..." : "Delete"}
         </button>
       )}
     </div>
