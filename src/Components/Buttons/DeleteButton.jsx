@@ -11,7 +11,6 @@ export default function DeleteButton({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async (id) => {
-<<<<<<< HEAD
     if (isDeleting || !id) {
       return;
     }
@@ -37,23 +36,6 @@ export default function DeleteButton({
       }
     } finally {
       setIsDeleting(false);
-=======
-    if (userRole === "admin" && toShowAdmin === "users") {
-      await api.delete(`/admin/users/${id}`);
-      navigate("/admin/users");
-      return;
-    }
-
-    if (userRole === "admin" && toShowAdmin === "notes") {
-      await api.delete(`/notes/${id}`);
-      navigate("/notes");
-      return;
-    }
-
-    if (userRole === "admin") {
-      await api.delete(`/notes/${id}`);
-      navigate("/notes");
->>>>>>> fa36e47 (f)
     }
   };
 

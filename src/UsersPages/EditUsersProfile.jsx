@@ -19,10 +19,7 @@ export default function EditUsersProfile() {
   useEffect(() => {
     const currentOwner = async () => {
       try {
-<<<<<<< HEAD
         setIsLoading(true);
-=======
->>>>>>> fa36e47 (f)
         const res = await api.get(`/users/${userId}`);
         setData({
           username: res.data?.user?.username || "",
@@ -44,10 +41,7 @@ export default function EditUsersProfile() {
   const handleEditUser = async (e) => {
     e.preventDefault();
     try {
-<<<<<<< HEAD
       setIsUpdating(true);
-=======
->>>>>>> fa36e47 (f)
       const res = await api.patch(`/users/${userId}/edit`, data);
       console.log("Edited User: ", res.data);
       flashToast("Profile updated successfully.", "success");

@@ -17,10 +17,7 @@ export default function CurrentOwnerProfile() {
   useEffect(() => {
     const currentOwner = async () => {
       try {
-<<<<<<< HEAD
         setIsLoading(true);
-=======
->>>>>>> fa36e47 (f)
         const res = await api.get(`/users/`);
         setOwner(res.data.user);
       } catch (e) {

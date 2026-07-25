@@ -22,10 +22,7 @@ export default function SingleUsers() {
   useEffect(() => {
     const getOneUser = async () => {
       try {
-<<<<<<< HEAD
         setIsLoading(true);
-=======
->>>>>>> fa36e47 (f)
         const res = await api.get(`/admin/users/${userId}`);
         console.log("get one note AllNotes F: ", res.data);
         setUsers(res.data);

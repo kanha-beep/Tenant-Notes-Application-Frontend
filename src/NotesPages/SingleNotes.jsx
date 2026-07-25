@@ -21,10 +21,7 @@ export default function Notes() {
   useEffect(() => {
     const getOneNotes = async () => {
       try {
-<<<<<<< HEAD
         setIsLoading(true);
-=======
->>>>>>> fa36e47 (f)
         const res = await api.get(`/notes/${noteId}`);
         setNotes(res.data);
       } catch (e) {
