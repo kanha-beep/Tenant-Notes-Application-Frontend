@@ -18,12 +18,17 @@ export default function EditNotes() {
   useEffect(() => {
     const fetchNote = async () => {
       try {
+<<<<<<< HEAD
         setIsLoading(true);
         const res = await api.get(`/notes/${noteId}/edit`);
         setData({
           title: res.data?.title || "",
           content: res.data?.content || "",
         });
+=======
+        const res = await api.get(`/notes/${noteId}/edit`);
+        setData(res.data);
+>>>>>>> fa36e47 (f)
       } catch (e) {
         setMsg(createToast(e.response?.data?.message || "Error fetching note"));
       } finally {
@@ -40,12 +45,16 @@ export default function EditNotes() {
   const handleEditNote = async (e) => {
     e.preventDefault();
     try {
+<<<<<<< HEAD
       setIsUpdating(true);
       const payload = {
         title: data.title,
         content: data.content,
       };
       const res = await api.patch(`/notes/${noteId}/edit`, payload);
+=======
+      const res = await api.patch(`/notes/${noteId}/edit`, data);
+>>>>>>> fa36e47 (f)
       console.log("Edited Note: ", res.data);
       flashToast("Note updated successfully.", "success");
       navigate(`/notes/${noteId}`);

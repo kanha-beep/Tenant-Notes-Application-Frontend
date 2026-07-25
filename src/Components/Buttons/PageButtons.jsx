@@ -23,6 +23,7 @@ export default function PageButtons({
   const [totalNotesOfCompany, setTotalNotesOfCompany] = useState(0);
 
   const handlePage = async () => {
+<<<<<<< HEAD
     setListLoading?.(true);
     try {
       if (userRole === "user") {
@@ -33,6 +34,16 @@ export default function PageButtons({
         setFilterNotes(res.data.items);
         setListTotalCount?.(res.data.meta.totalItems || 0);
       } else {
+=======
+    if (userRole === "user") {
+      const res = await api.get(`/notes?page=${page}&search=${search}&sort=${sortBy}`);
+      setPage(res.data.meta.page);
+      setTotalPages(res.data.meta.totalPages);
+      setTotalNotes(res.data.meta.totalItems);
+      setFilterNotes(res.data.items);
+    } else {
+      try {
+>>>>>>> fa36e47 (f)
         if (toShowAdmin === "users") {
           const res = await api.get(`/admin/users?page=${page}&search=${search}&sort=${sortBy}`);
           setPage(res.data.page);
@@ -49,7 +60,10 @@ export default function PageButtons({
           setTotalNotes(res.data.meta.totalItems);
           setFilterNotes(res.data.items);
           setTotalNotesOfCompany(res?.data?.meta?.totalItems || 0);
+<<<<<<< HEAD
           setListTotalCount?.(res?.data?.meta?.totalItems || 0);
+=======
+>>>>>>> fa36e47 (f)
         }
       }
       setListLoaded?.(true);

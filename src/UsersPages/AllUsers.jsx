@@ -5,7 +5,11 @@ import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 
 export default function AllUsers({
   navigate,
+<<<<<<< HEAD
   // setUsers,
+=======
+  setUsers,
+>>>>>>> fa36e47 (f)
   filterTenant,
   setFilterUsers,
   filterUsers,
@@ -18,9 +22,29 @@ export default function AllUsers({
   const userRole = localStorage.getItem("role");
 
   useEffect(() => {
+<<<<<<< HEAD
     if (userRole === "admin") {
       setToShowAdmin("users");
     }
+=======
+    let intervalId;
+
+    const getAllUsers = async () => {
+      try {
+        const res = await api.get("/admin/users");
+        setUsers(res.data);
+        setFilterUsers(res.data?.users);
+        setToShowAdmin("users");
+      } catch (e) {
+        console.log("error in AllUsers:", e.response);
+      }
+    };
+
+    getAllUsers();
+    intervalId = setInterval(getAllUsers, 30000);
+
+    return () => clearInterval(intervalId);
+>>>>>>> fa36e47 (f)
   }, []);
 
   useEffect(() => {

@@ -3,6 +3,7 @@
 import AllNotesCards from "../NotesPages/NotesCards/AllNotesCards.jsx";
 import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 
+<<<<<<< HEAD
 export default function AllNotes({
   navigate,
   toShowAdmin,
@@ -12,6 +13,9 @@ export default function AllNotes({
   isLoaded,
   totalCount,
 }) {
+=======
+export default function AllNotes({ toShowAdmin, filterNotes, setFilterNotes }) {
+>>>>>>> fa36e47 (f)
   const userRole = localStorage.getItem("role");
 
   return (
@@ -30,7 +34,10 @@ export default function AllNotes({
             <AllNotesCards
               key={n._id}
               n={n}
+<<<<<<< HEAD
               navigate={navigate}
+=======
+>>>>>>> fa36e47 (f)
               setFilterNotes={setFilterNotes}
               userRole={userRole}
               toShowAdmin={toShowAdmin}

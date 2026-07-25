@@ -69,6 +69,7 @@ export default function Plan() {
   const [roleMsg, setRoleMsg] = useState("");
   const [msg, setMsg] = useState("");
   const [planState, setPlanState] = useState(null);
+<<<<<<< HEAD
   const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
   const [data, setData] = useState({ plan: "team", seats: 25, slaHours: 24 });
@@ -81,15 +82,22 @@ export default function Plan() {
     return PLAN_OPTIONS.find((option) => option.id === planState?.plan) || null;
   }, [planState]);
 
+=======
+  const navigate = useNavigate();
+  const [data, setData] = useState({ plan: "team", seats: 25, slaHours: 24 });
+>>>>>>> fa36e47 (f)
   const getPlan = async () => {
     try {
       const res = await api.get("/admin/plan");
       setPlanState(res.data);
+<<<<<<< HEAD
       setData({
         plan: normalizePlan(res.data.plan),
         seats: res.data.billing?.seats || 25,
         slaHours: res.data.settings?.slaHours || 24,
       });
+=======
+>>>>>>> fa36e47 (f)
     } catch (e) {
       console.log("error plan", e.response?.data?.message);
       setUserRole(e.response?.data?.user || "");
@@ -115,8 +123,12 @@ export default function Plan() {
   const handleBuyPlan = async (e) => {
     try {
       e.preventDefault();
+<<<<<<< HEAD
       setIsSaving(true);
       const res = await api.post("/admin/plan", data);
+=======
+      const res = await api.post(`/admin/plan`, data);
+>>>>>>> fa36e47 (f)
       setPlanState(res.data);
       setMsg(createToast("Plan updated successfully", "success"));
     } catch (e) {
@@ -130,11 +142,15 @@ export default function Plan() {
   useEffect(() => {
     getPlan();
   }, []);
+<<<<<<< HEAD
 
+=======
+>>>>>>> fa36e47 (f)
   return (
     <div className="plan-shell min-h-screen">
       <Msg msg={msg} setMsg={setMsg} />
       <Msg msg={roleMsg} setMsg={setRoleMsg} />
+<<<<<<< HEAD
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <section className="plan-hero relative overflow-hidden rounded-[2rem] border border-white/60 px-6 py-8 shadow-[0_30px_80px_rgba(15,23,42,0.14)] sm:px-8 lg:px-10">
@@ -429,6 +445,69 @@ export default function Plan() {
           </div>
         </section>
       </div>
+=======
+      <h1> Billing and SLA </h1>
+      {planState && (
+        <p>
+          Current plan: {planState.plan} | Seats: {planState.billing?.seats} | SLA hours:{" "}
+          {planState.settings?.slaHours}
+        </p>
+      )}
+      <div>
+        <div>
+          <form onSubmit={handleBuyPlan}>
+            <label>Plan</label>&nbsp;
+            <select onChange={handleChange} name="plan" value={data.plan}>
+              <option value="free">Free</option>
+              <option value="team">Team</option>
+              <option value="enterprise">Enterprise</option>
+            </select>
+            <br />
+            <br />
+            <label>Seats</label>&nbsp;
+            <input
+              type="number"
+              onChange={handleChange}
+              placeholder="Seats"
+              name="seats"
+              value={data.seats}
+            />
+            <br />
+            <br />
+            <label>SLA Hours</label>&nbsp;
+            <input
+              type="number"
+              onChange={handleChange}
+              placeholder="24"
+              name="slaHours"
+              value={data.slaHours}
+            />
+            <br />
+            <br />
+            <button> buy </button>
+          </form>
+        </div>
+      </div>
+      <br />
+      {userRole === "user" && (
+        <button
+          onClick={() => {
+            navigate("/notes");
+          }}
+        >
+          Notes
+        </button>
+      )}
+      <br />
+      <br />
+      <button
+        onClick={() => {
+          navigate("/admin/dashboard");
+        }}
+      >
+        Dashboard
+      </button>
+>>>>>>> fa36e47 (f)
     </div>
   );
 }
