@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import api from "../init/instance.js";
 import HomePageButton from "../Components/Buttons/HomePageButton.jsx";

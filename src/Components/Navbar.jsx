@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../init/instance.js";
-import { createToast } from "../utils/toast.js";
 
 const navLinkClass =
   "rounded-xl px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-sky-50 hover:text-sky-700";
@@ -16,14 +15,14 @@ export default function MyNavbar({ isLoggedIn, setMsg, userRole }) {
         const res = await api.get("/auth/me");
         setOwner(res.data);
       } catch (e) {
-        if ([401, 402, 403].includes(e?.response?.status)) {
-          setMsg(createToast(e.response.data, "error"));
-        }
+        setOwner("");
       }
     };
 
     if (isLoggedIn) {
       currentOwner();
+    } else {
+      setOwner("");
     }
   }, [isLoggedIn, setMsg]);
 
@@ -78,16 +77,7 @@ export default function MyNavbar({ isLoggedIn, setMsg, userRole }) {
               <Link to={`/users/${owner?._id}`} className={navLinkClass}>
                 Profile
               </Link>
-            ) : (
-              <>
-                <Link to="/auth" className={navLinkClass}>
-                  Features
-                </Link>
-                <Link to="/health" className={navLinkClass}>
-                  Health
-                </Link>
-              </>
-            )}
+            ) : null}
           </div>
 
           <div className="flex w-full flex-col gap-2 lg:w-auto lg:flex-row lg:items-center">
@@ -100,14 +90,14 @@ export default function MyNavbar({ isLoggedIn, setMsg, userRole }) {
               </Link>
             ) : (
               <>
-                <Link to="/auth" className={navLinkClass}>
+                {/* <Link to="/auth" className={navLinkClass}>
                   Sign up
-                </Link>
+                </Link> */}
                 <Link
                   to="/auth"
-                  className="inline-flex items-center justify-center rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                  className="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold hover:text-white hover:bg-red-200"
                 >
-                  Login
+                  Auth
                 </Link>
               </>
             )}

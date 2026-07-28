@@ -58,80 +58,106 @@ export default function Right({ details }) {
 
   return (
     <div className="h-full">
-      <div className="mb-4">
-        <h1 className="mb-2 text-3xl font-bold text-white">Admin Dashboard</h1>
-        <p className="text-white/70">
-          Welcome back! Here's what's happening with your tenant management
-          system.
-        </p>
-      </div>
-
-      <div className="mb-4 grid gap-4 md:grid-cols-2">
-        <div className="rounded-3xl bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] p-4 text-white shadow-lg">
+      <div className="mb-2 grid gap-4 md:grid-cols-2">
+        <div className="rounded-3xl bg-purple-600/60 p-4 text-white shadow-lg h-[5rem] hover:border-gray-500 hover:-translate-y-1 border-purple-700 border-2 transition duration-400 hover:shadow-lg ">
           <div className="flex items-center justify-between">
-            <div>
-              <h6 className="mb-2 text-white/70">Total Notes</h6>
-              <h2 className="mb-0 text-3xl font-bold">
-                {details?.kpis?.totalNotes ?? 0}
-              </h2>
+            <div className="contain w-full flex items-center justify-between">
+              <div className="flex gap-3 items-center">
+                {/* <h6 className="mb-2 text-white/70">Total Notes</h6> */}
+                <h2 className="mb-0 text-3xl font-bold">
+                  {(details?.kpis?.totalNotes ?? 0) == 0 ? (
+                    <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                  ) : (
+                    <span>{details?.kpis?.totalNotes ?? 0}</span>
+                  )}
+                </h2>
+                <div className="rounded-full bg-white/20 p-2 text-lg font-semibold flex justify-center items-center translate-y-[0.1rem]">
+                  Notes
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <AllNotesButton />
+                <button
+                  className={cn(
+                    uiTokens.buttonBase,
+                    "border border-white/25 bg-white/10 px-3 py-2 text-white hover:bg-white/20",
+                  )}
+                  onClick={downloadNotes}
+                  disabled={isDownloadingNotes}
+                  type="button"
+                >
+                  {isDownloadingNotes ? "Download Notes..." : "Download Notes"}
+                </button>
+              </div>
             </div>
-            <div className="rounded-full bg-white/20 p-3 text-lg font-semibold">
-              Notes
-            </div>
-          </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <AllNotesButton />
-            <button
-              className={cn(
-                uiTokens.buttonBase,
-                "border border-white/25 bg-white/10 px-3 py-2 text-white hover:bg-white/20"
-              )}
-              onClick={downloadNotes}
-              disabled={isDownloadingNotes}
-              type="button"
-            >
-              {isDownloadingNotes ? "Download Notes..." : "Download Notes"}
-            </button>
           </div>
         </div>
 
-        <div className="rounded-3xl bg-[linear-gradient(135deg,#f093fb_0%,#f5576c_100%)] p-4 text-white shadow-lg">
+        <div className="rounded-3xl bg-pink-600/60 p-4 text-white shadow-lg h-[5rem] hover:border-slate-500 hover:shadow-lg hover:-translate-y-1 border-purple-700 border-2 transition duration-400">
           <div className="flex items-center justify-between">
-            <div>
-              <h6 className="mb-2 text-white/70">Total Users</h6>
-              <h2 className="mb-0 text-3xl font-bold">
-                {details?.kpis?.totalUsers ?? 0}
-              </h2>
+            <div className="contain w-full flex items-center justify-between">
+              <div className="contain w-full flex items-center justify-between">
+                <div className="flex gap-3 items-center">
+                  {/* <h6 className="mb-2 text-white/70">Total Notes</h6> */}
+                  <h2 className="mb-0 text-3xl font-bold">
+                    {(details?.kpis?.totalUsers ?? 0) == 0 ? (
+                      <span className="inline-block h-5 w-5 animate-spin border-white rounded-full border-2 border-t-transparent"></span>
+                    ) : (
+                      <span>{details?.kpis?.totalUsers ?? 0}</span>
+                    )}
+                  </h2>
+                  <div className="rounded-full bg-white/20 p-2 text-lg font-semibold flex justify-center items-center translate-y-[0.1rem]">
+                    Users
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <AllUsersButton />
+                  <button
+                    className={cn(
+                      uiTokens.buttonBase,
+                      "border border-white/25 bg-white/10 px-3 py-2 text-white hover:bg-white/20",
+                    )}
+                    onClick={downloadUsers}
+                    disabled={isDownloadingUsers}
+                    type="button"
+                  >
+                    {isDownloadingUsers
+                      ? "Download All Users..."
+                      : "Download Users"}
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="rounded-full bg-white/20 p-3 text-lg font-semibold">
-              Users
-            </div>
-          </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <AllUsersButton />
-            <button
-              className={cn(
-                uiTokens.buttonBase,
-                "border border-white/25 bg-white/10 px-3 py-2 text-white hover:bg-white/20"
-              )}
-              onClick={downloadUsers}
-              disabled={isDownloadingUsers}
-              type="button"
-            >
-              {isDownloadingUsers ? "Download All Users..." : "Download All Users"}
-            </button>
           </div>
         </div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
-          <h5 className="mb-3 text-lg font-bold text-slate-900">Calendar</h5>
-          <Calendar onChange={setValue} value={value} className="w-100" />
+        <div className="space-y-2">
+          <div className="rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
+            <h5 className="mb-3 text-lg font-bold text-slate-900">Calendar</h5>
+            <Calendar onChange={setValue} value={value} className="w-100" />
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            <PlanButton />
-            <HealthButton />
+            <div className="mt-4 flex flex-wrap gap-2">
+              <PlanButton />
+              <HealthButton />
+            </div>
+          </div>
+
+          <div className="rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
+              SLA and usage
+            </p>
+            <div className="space-y-2 text-sm text-slate-700">
+              <p>SLA compliance: {details?.sla?.complianceRate ?? 0}%</p>
+              <p>Breaches: {details?.sla?.breachCount ?? 0}</p>
+              <p>Plan: {details?.billing?.plan ?? "free"}</p>
+              <p>
+                Seats: {details?.usage?.seatsUsed ?? 0}/
+                {details?.usage?.seatsProvisioned ?? 0}
+              </p>
+              <p>Note usage: {details?.usage?.noteUtilization ?? "0/0"}</p>
+            </div>
           </div>
         </div>
 
@@ -156,7 +182,7 @@ export default function Right({ details }) {
                 <div>
                   <h6 className="mb-1 font-semibold">Active Sessions</h6>
                   <small className="text-slate-500">
-                  Users currently online
+                    Users currently online
                   </small>
                 </div>
                 <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">
@@ -180,34 +206,30 @@ export default function Right({ details }) {
               AI tenant operations assistant
             </p>
             <div className="space-y-3 text-sm text-slate-700">
-              <p>{details?.aiAssistant?.headline || "No workload issues detected."}</p>
+              <p>
+                {details?.aiAssistant?.headline ||
+                  "No workload issues detected."}
+              </p>
               {details?.aiAssistant?.overloadedMembers?.map((member) => (
-                <div key={member.userId} className="rounded-2xl bg-slate-100 p-3">
+                <div
+                  key={member.userId}
+                  className="rounded-2xl bg-slate-100 p-3"
+                >
                   <p className="font-semibold">{member.username}</p>
                   <p className="text-slate-500">{member.reason}</p>
                 </div>
               ))}
               {details?.aiAssistant?.followUpDrafts?.slice(0, 2).map((item) => (
-                <div key={item.noteId} className="rounded-2xl border border-slate-200 p-3">
+                <div
+                  key={item.noteId}
+                  className="rounded-2xl border border-slate-200 p-3"
+                >
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                     Draft follow-up
                   </p>
                   <p>{item.draft}</p>
                 </div>
               ))}
-            </div>
-          </div>
-
-          <div className="rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-              SLA and usage
-            </p>
-            <div className="space-y-2 text-sm text-slate-700">
-              <p>SLA compliance: {details?.sla?.complianceRate ?? 0}%</p>
-              <p>Breaches: {details?.sla?.breachCount ?? 0}</p>
-              <p>Plan: {details?.billing?.plan ?? "free"}</p>
-              <p>Seats: {details?.usage?.seatsUsed ?? 0}/{details?.usage?.seatsProvisioned ?? 0}</p>
-              <p>Note usage: {details?.usage?.noteUtilization ?? "0/0"}</p>
             </div>
           </div>
         </div>

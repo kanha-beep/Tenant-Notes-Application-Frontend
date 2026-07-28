@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../init/instance.js";
 import SingleNotesCards from "./NotesCards/SingleNotesCards.jsx";
@@ -63,25 +64,24 @@ export default function Notes() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
       <Msg msg={msg} setMsg={setMsg} />
-      <div className="flex justify-center">
-        <div className="w-full max-w-2xl">
-          {isLoading ? <LoadingSpinner size="small" text="Note loading..." /> : null}
-          {notes && (
-            <div key={notes._id} className={cn(uiTokens.panel, "mb-4")}>
-              <SingleNotesCards
-                n={notes}
-                navigate={navigate}
-                noteId={noteId}
-                check={check}
-                setCheck={handleCheckChange}
-                feedback={feedback}
-                setFeedback={setFeedback}
-                onSubmitTask={handleSubmitTask}
-                isSaving={isSaving}
-              />
-            </div>
-          )}
-        </div>
+      <div className="flex justify-center items-start h-[40rem] w-full">
+        {isLoading ? (
+          <LoadingSpinner size="small" text="Note loading..." />
+        ) : (
+          notes && (
+            <SingleNotesCards
+              n={notes}
+              navigate={navigate}
+              noteId={noteId}
+              check={check}
+              setCheck={handleCheckChange}
+              feedback={feedback}
+              setFeedback={setFeedback}
+              onSubmitTask={handleSubmitTask}
+              isSaving={isSaving}
+            />
+          )
+        )}
       </div>
       <div className="text-center">
         <button

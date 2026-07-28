@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import api from "../init/instance.js";
 import { createToast } from "../utils/toast.js";
@@ -13,7 +14,6 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
     email: "",
     password: "",
     tenant: "",
-    inviteToken: "",
   });
 
   const url = isPage ? "login" : "register";
@@ -29,14 +29,7 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
     if (!isPage) {
       try {
         await api.post(`/auth/${url}`, userForm);
-        setMsg(
-          createToast(
-            userForm.inviteToken
-              ? "Invite accepted successfully. Please log in."
-              : "Workspace created successfully. Please log in.",
-            "success",
-          ),
-        );
+        setMsg(createToast("Account created successfully. Please log in.", "success"));
         setIsPage(true);
       } catch (e) {
         if ([401, 402, 403].includes(e?.response?.status)) {
@@ -79,17 +72,9 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-600 to-cyan-500 text-2xl font-black text-white shadow-[0_12px_30px_rgba(14,165,233,0.28)]">
               T
             </div>
-            <p className="mt-4 text-sm font-semibold uppercase tracking-[0.24em] text-sky-700">
-              TenantApp
-            </p>
-            <h2 className="mt-2 text-3xl font-black text-slate-900 sm:text-4xl">
-              {isPage ? "Welcome back" : "Create your account"}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
-              {isPage
-                ? "Sign in to continue to your workspace."
-                : "Register your account with the tenant and role details below."}
-            </p>
+           
+           
+            
           </div>
 
           <div className="mt-6 rounded-2xl bg-slate-100 p-1.5">
@@ -160,7 +145,7 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
             </div>
 
             {!isPage && (
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-1">
                 <label className="block">
                   <span className={uiTokens.label}>Username</span>
                   <input
@@ -169,17 +154,6 @@ export default function Auth({ setIsLoggedIn, setMsg, msg }) {
                     placeholder="Enter your username"
                     name="username"
                     value={userForm.username}
-                    onChange={handleChange}
-                  />
-                </label>
-                <label className="block">
-                  <span className={uiTokens.label}>Invite Token</span>
-                  <input
-                    type="text"
-                    className={uiTokens.input}
-                    placeholder="Optional for invited users"
-                    name="inviteToken"
-                    value={userForm.inviteToken}
                     onChange={handleChange}
                   />
                 </label>

@@ -2,7 +2,7 @@ import { cn, uiTokens } from "../../utils/uiTokens.js";
 
 export default function HomePageButton({ navigate, userRole, toShowAdmin }) {
   console.log("now amdin will see: ", userRole, toShowAdmin);
-  const buttonClass = cn(uiTokens.buttonBase, uiTokens.buttonSecondary, "px-3 py-2");
+  const buttonClass = cn(uiTokens.buttonBase, uiTokens.buttonSecondary, "px-3 py-2 ml-3");
   return (
     <div>
       {userRole === "user" ? (
@@ -13,7 +13,7 @@ export default function HomePageButton({ navigate, userRole, toShowAdmin }) {
           }}
           type="button"
         >
-          Home Page For User
+          Home Page
         </button>
       ) : toShowAdmin === "users" ? (
         <button
@@ -23,7 +23,7 @@ export default function HomePageButton({ navigate, userRole, toShowAdmin }) {
           }}
           type="button"
         >
-          Home Page for Admin + users
+          Home Page
         </button>
       ) : (
         <button
@@ -33,7 +33,7 @@ export default function HomePageButton({ navigate, userRole, toShowAdmin }) {
           }}
           type="button"
         >
-          Home Page for admin + notes
+          Home Page
         </button>
       )}
       {/* <button

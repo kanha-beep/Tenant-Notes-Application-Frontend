@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "motion/react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../init/instance.js";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";

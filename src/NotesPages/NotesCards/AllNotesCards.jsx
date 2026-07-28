@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ViewButton from "../../Components/Buttons/ViewButton.jsx";
+import { formatNoteTitle } from "../../utils/noteTitle.js";
 
 function formatDateTime(value) {
   if (!value) return "Not set";
@@ -54,7 +55,9 @@ export default function AllNotesCards({ n, navigate, userRole }) {
           </>
         ) : (
           <>
-            <h5 className="text-xl font-bold text-slate-900">{n?.title}</h5>
+            <h5 className="text-xl font-bold text-slate-900">
+              {formatNoteTitle(n?.title)}
+            </h5>
             <div className="mb-3 space-y-1">
               <small className="block text-slate-500">
                 Owner: {n?.user?.username || "Unknown"}
@@ -70,9 +73,7 @@ export default function AllNotesCards({ n, navigate, userRole }) {
                   Completed at: {formatDateTime(n?.completedAt)}
                 </small>
               ) : null}
-              <small className="font-semibold text-sky-700">
-                {n?.tenant?.name}
-              </small>
+           
             </div>
             {showAdminNotes && hasUserFeedback ? (
               <div className="mb-3">

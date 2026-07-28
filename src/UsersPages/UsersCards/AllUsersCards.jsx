@@ -1,4 +1,5 @@
 import ViewButton from "../../Components/Buttons/ViewButton.jsx";
+import { formatUserDisplayEmail, formatUserDisplayName } from "../../utils/userDisplay.js";
 
 function getPresence(user) {
   if (!user?.lastSeenAt) {
@@ -40,8 +41,10 @@ export default function AllUsersCards({ n, navigate, userRole }) {
 
         {userRole === "admin" && toShowAdmin === "users" && (
           <>
-            <h5 className="text-xl font-bold text-slate-900">{n?.username}</h5>
-            <p className="text-slate-500">{n?.email}</p>
+            <h5 className="text-xl font-bold text-slate-900">
+              {formatUserDisplayName(n?.username)}
+            </h5>
+            <p className="text-slate-500">{formatUserDisplayEmail(n?.email)}</p>
             <div className="mb-3 space-y-1">
               <small className="block text-slate-500">ID: {n?._id}</small>
               <small className="block text-slate-500">{presence.detail}</small>

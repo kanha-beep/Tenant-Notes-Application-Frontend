@@ -33,8 +33,8 @@ export default function ViewButton({ n }) {
           className={buttonClass}
           type="button"
         >
+         
           <span>View</span>
-          <span>View Note</span>
         </button>
       )}
       {userRole === "admin" && toShowAdmin === "users" && (
@@ -45,8 +45,8 @@ export default function ViewButton({ n }) {
           className={buttonClass}
           type="button"
         >
-          <span>User</span>
-          <span>View User</span>
+         
+          <span>View</span>
         </button>
       )}
     </div>

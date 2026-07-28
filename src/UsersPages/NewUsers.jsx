@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import NewUsersCards from "./UsersCards/NewUsersCards.jsx";
 import Msg from "../Components/AlertBoxes/Msg";
 

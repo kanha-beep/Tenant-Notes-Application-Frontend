@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import api from "../init/instance.js";
 import GoHomeButton from "../Components/Buttons/GoHomeButton.jsx";
@@ -6,6 +7,8 @@ import Msg from "../Components/AlertBoxes/Msg.jsx";
 import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 import { createToast } from "../utils/toast.js";
 import { cn, uiTokens } from "../utils/uiTokens.js";
+import { currentUser } from "../Components/CurrentUser.js";
+import { formatUserDisplayName } from "../utils/userDisplay.js";
 
 export default function CurrentOwnerProfile() {
   // const { userId } = useParams();
@@ -13,6 +16,7 @@ export default function CurrentOwnerProfile() {
   const navigate = useNavigate();
   const [msg, setMsg] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const {setUser} = useContext(currentUser)
 
   useEffect(() => {
     const currentOwner = async () => {
@@ -20,6 +24,7 @@ export default function CurrentOwnerProfile() {
         setIsLoading(true);
         const res = await api.get(`/users/`);
         setOwner(res.data.user);
+        setUser(res.data.user)
       } catch (e) {
         setMsg(createToast(e.response?.data?.message || "Error loading profile"));
       } finally {
@@ -33,11 +38,11 @@ export default function CurrentOwnerProfile() {
     <div className="min-h-screen bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]">
       <Msg msg={msg} setMsg={setMsg} />
       <div className="mx-auto max-w-5xl px-4 py-10">
-        <div className="mb-5 text-center">
+        {/* <div className="mb-5 text-center">
           <div className="mb-3 inline-flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur">
             <span className="text-lg font-bold text-white">User</span>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex justify-center">
           <div className="w-full max-w-xl">
@@ -51,7 +56,7 @@ export default function CurrentOwnerProfile() {
                     </span>
                   </div>
                   <h3 className="mb-1 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] bg-clip-text text-2xl font-bold text-transparent">
-                    {owner?.username}
+                    {formatUserDisplayName(owner?.username)}
                   </h3>
                   <p className="text-slate-500">
                     Member since {new Date().getFullYear()}
@@ -72,7 +77,9 @@ export default function CurrentOwnerProfile() {
                     <div className="mb-2 flex items-center">
                       <small className="font-medium text-slate-500">Username</small>
                     </div>
-                    <p className="mb-0 font-bold text-sky-700">{owner?.username}</p>
+                    <p className="mb-0 font-bold text-sky-700">
+                      {formatUserDisplayName(owner?.username)}
+                    </p>
                   </div>
 
                   <div className="rounded-2xl bg-slate-50 p-3">

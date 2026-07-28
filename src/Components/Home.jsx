@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "motion/react";
 import { API_BASE_URL } from "../init/apiBase";
 
 const testimonials = [
@@ -131,36 +132,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f4f7fb] px-4 py-4 text-slate-900 max-[760px]:px-3">
       <div className="mx-auto max-w-7xl space-y-5">
-        <section className="relative overflow-hidden rounded-[2.2rem] border border-slate-200 bg-[linear-gradient(135deg,#0f172a_0%,#1e293b_55%,#0f766e_100%)] px-6 py-6 text-white shadow-[0_30px_90px_rgba(15,23,42,0.22)] sm:px-8 sm:py-8 lg:px-10 lg:py-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(125,211,252,0.26),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(110,231,183,0.18),transparent_28%)]" />
-
-          <header className="relative z-10 flex flex-wrap items-center gap-4">
-            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-white/12 text-lg font-black">
-              T
-            </div>
-            <div>
-              <p className="text-base font-bold">{homepage.brand.name}</p>
-              <p className="text-sm text-slate-200">{homepage.brand.subtitle}</p>
-            </div>
-          </header>
-
-          <div className="relative z-10 mt-12">
-            <div>
-              <h1 className="mt-5 max-w-4xl text-[clamp(2.5rem,5vw,5.4rem)] font-black leading-[0.98] tracking-[-0.05em]">
-                Welcome to multi tenant software, manage your users and notes as a pro
-              </h1>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-2xl bg-white px-5 text-sm font-bold text-slate-950 transition hover:-translate-y-0.5"
-                  href="/auth"
-                >
-                  Login to workspace
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+       
 
         <section
           id="services"

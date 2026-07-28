@@ -20,7 +20,7 @@ export default function GoHomeButton({ navigate }) {
       {userRole === "admin" && toShowAdmin === "users" && (
         <button
           className={buttonClass}
-          onClick={() => navigate("/admin/users", { state: "users" })}
+          onClick={() => navigate("/admin/dashboard", { state: "users" })}
           type="button"
         >
           Admin can go Home

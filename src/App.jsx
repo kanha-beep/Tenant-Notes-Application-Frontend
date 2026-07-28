@@ -95,7 +95,7 @@ function App() {
               path="/admin/dashboard"
               element={
                 userRole === "" ? (
-                  <div>Loading...</div>
+                  <div className="bg-yellow-200 border-2 border-green-200 h-10 w-full text-center">Loading...</div>
                 ) : userRole === "admin" ? (
                   <Dashboard isLoggedIn={isLoggedIn} />
                 ) : (

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import "./Plan.css";
 import api from "../init/instance.js";

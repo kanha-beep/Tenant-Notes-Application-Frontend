@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import api from "../init/instance.js";
 import Msg from "../Components/AlertBoxes/Msg.jsx";
 import LoadingSpinner from "../Components/LoadingSpinner.jsx";
@@ -7,6 +8,7 @@ import SingleUsersCards from "./UsersCards/SingleUsersCards.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { createToast, flashToast } from "../utils/toast.js";
 import { cn, uiTokens } from "../utils/uiTokens.js";
+import { formatUserDisplayName } from "../utils/userDisplay.js";
 
 export default function SingleUsers() {
   const userRole = localStorage.getItem("role");
@@ -58,8 +60,14 @@ export default function SingleUsers() {
       setNoteForm({ title: "", content: "" });
       navigate("/notes");
     } catch (e) {
-      const errorMessage = e.response?.data?.message || e.response?.data || "Failed to create note";
-      if (typeof errorMessage === "string" && errorMessage.toLowerCase().includes("upgrade to pro")) {
+      const errorMessage =
+        e.response?.data?.message ||
+        e.response?.data ||
+        "Failed to create note";
+      if (
+        typeof errorMessage === "string" &&
+        errorMessage.toLowerCase().includes("upgrade to pro")
+      ) {
         flashToast("Free plan note limit reached. Please buy a plan.", "error");
         navigate("/admin/plan");
         return;
@@ -71,88 +79,97 @@ export default function SingleUsers() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-3 py-4">
+    <div className="mx-auto px-3">
       {/* {userRole === "admin" && toShowAdmin === "users" && (
         <h2 className="mb-4 text-center text-3xl font-black tracking-[-0.03em] text-slate-900">
           Single User
         </h2>
       )} */}
-      <Msg msg={msg} setMsg={setMsg} />
+      {/* <Msg msg={msg} setMsg={setMsg} /> */}
 
-      {isLoading ? <LoadingSpinner size="small" text="User loading..." /> : null}
+      {isLoading ? (
+        <LoadingSpinner size="small" text="User loading..." />
+      ) : null}
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_0.95fr]">
-        <div className="min-w-0">
-          {userRole === "admin" && toShowAdmin === "users" && (
-            <SingleUsersCards
-              users={users}
-              navigate={navigate}
-              key={users?._id}
-              n={users}
-              userRole={userRole}
-              toShowAdmin={toShowAdmin}
-              userId={userId}
-              noteId={noteId}
-            />
-          )}
+      <div className="grid gap-6 lg:grid-cols-8">
+        <div className="col-span-4">
+          <motion.div
+            initial={{ opacity: 0, x: -300 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeInOut" }}
+          >
+            {userRole === "admin" && toShowAdmin === "users" && (
+              <SingleUsersCards
+                users={users}
+                navigate={navigate}
+                key={users?._id}
+                n={users}
+                userRole={userRole}
+                toShowAdmin={toShowAdmin}
+                userId={userId}
+                noteId={noteId}
+              />
+            )}
+          </motion.div>
         </div>
 
         {userRole === "admin" && toShowAdmin === "users" && users && (
-          <section className={cn(uiTokens.panel, "h-fit") }>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-700">
-              Add note for this user
-            </p>
-            <h3 className="mt-3 text-2xl font-black tracking-[-0.03em] text-slate-950">
-              Create a note directly from {users.username}&apos;s profile
-            </h3>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              This note will be attached to <span className="font-semibold text-slate-900">{users.email}</span> in the backend.
-            </p>
+          <section className="h-[31.5rem] col-span-4 flex justify-start items-center pt-5">
+            <motion.div
+              initial={{ opacity: 0, x: 300 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeInOut" }}
+              className="contain rounded-2xl p-5 w-[90%] h-full bg-white"
+            >
+              <form onSubmit={handleCreateNoteForUser} className="space-y-4">
+                <label className="block">
+                  <span className={uiTokens.label}>Title</span>
+                  <input
+                    type="text"
+                    name="title"
+                    value={noteForm.title}
+                    onChange={handleNoteChange}
+                    className={uiTokens.input}
+                    placeholder="Title"
+                    required
+                  />
+                </label>
 
-            <form onSubmit={handleCreateNoteForUser} className="mt-6 space-y-4">
-              <label className="block">
-                <span className={uiTokens.label}>Title</span>
-                <input
-                  type="text"
-                  name="title"
-                  value={noteForm.title}
-                  onChange={handleNoteChange}
-                  className={uiTokens.input}
-                  placeholder="Enter note title"
-                  required
-                />
-              </label>
+                <label className="block">
+                  <span className={uiTokens.label}>Content</span>
+                  <textarea
+                    name="content"
+                    value={noteForm.content}
+                    onChange={handleNoteChange}
+                    className={cn(uiTokens.input, "min-h-36 resize-y")}
+                    placeholder="Write the note for this user"
+                    required
+                  />
+                </label>
 
-              <label className="block">
-                <span className={uiTokens.label}>Content</span>
-                <textarea
-                  name="content"
-                  value={noteForm.content}
-                  onChange={handleNoteChange}
-                  className={cn(uiTokens.input, "min-h-36 resize-y")}
-                  placeholder="Write the note for this user"
-                  required
-                />
-              </label>
+                <label className="block">
+                  <span className={uiTokens.label}>Email</span>
+                  <input
+                    type="text"
+                    value={users.email}
+                    readOnly
+                    className={cn(uiTokens.input, "bg-slate-50 text-slate-500")}
+                  />
+                </label>
 
-              <label className="block">
-                <span className={uiTokens.label}>User email</span>
-                <input
-                  type="text"
-                  value={users.email}
-                  readOnly
-                  className={cn(uiTokens.input, "bg-slate-50 text-slate-500")}
-                />
-              </label>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={cn(uiTokens.buttonBase, uiTokens.buttonAccent, "w-full")}
-              >
-                {isSubmitting ? "Creating note..." : "Create note for user"}
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={cn(
+                    uiTokens.buttonBase,
+                    uiTokens.buttonAccent,
+                    "w-full",
+                  )}
+                >
+                  {isSubmitting ? "Creating note..." : "Create note for user"}
+                </button>
+              </form>
+            </motion.div>
           </section>
         )}
       </div>

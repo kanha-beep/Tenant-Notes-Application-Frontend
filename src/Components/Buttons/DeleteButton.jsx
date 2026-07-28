@@ -43,7 +43,7 @@ export default function DeleteButton({
     <div>
       {userRole === "admin" && (
         <button
-          className={cn(uiTokens.buttonBase, uiTokens.buttonDanger, "px-3 py-2")}
+          className={cn(uiTokens.buttonBase, uiTokens.buttonDanger, "p-2")}
           onClick={() => handleDelete(n?._id)}
           disabled={isDeleting}
           type="button"

@@ -9,7 +9,7 @@ export default function Checkbox({ check, setCheck, toShowAdmin }) {
       onChange={(e) => {
         setCheck(e.target.checked);
       }}
-      className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-300"
+      className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-300 ml-5"
     />
   );
   return (

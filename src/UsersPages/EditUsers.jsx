@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "motion/react";
 import HomePageButton from "../Components/Buttons/HomePageButton.jsx";
 import api from "../init/instance.js";
 import UpdateButton from "../Components/Buttons/UpdateButton.jsx";

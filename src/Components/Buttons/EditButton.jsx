@@ -7,7 +7,7 @@ export default function EditButton({ userId, noteId }) {
   const [isRouting, setIsRouting] = useState(false);
   const userRole = localStorage.getItem("role");
   const toShowAdmin = localStorage.getItem("toShowAdmin");
-  const buttonClass = cn(uiTokens.buttonBase, uiTokens.buttonPrimary, "px-3 py-2 my-2");
+  const buttonClass = cn(uiTokens.buttonBase, uiTokens.buttonPrimary, "px-3 py-2 my-2 ml-5");
 
   const handleNavigate = (path, state) => {
     if (isRouting) {
@@ -37,7 +37,7 @@ export default function EditButton({ userId, noteId }) {
           disabled={isRouting}
           type="button"
         >
-          {isRouting ? "Edit Note..." : "Edit Note"}
+          {isRouting ? "Edit..." : "Edit"}
         </button>
       )}
     </div>

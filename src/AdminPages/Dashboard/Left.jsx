@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { currentUser } from "../../Components/CurrentUser";
 
-export default function Left() {
+export default function Left({details}) {
+  console.log("details: ", details)
+  const {user} = useContext(currentUser)
+  console.log("user' ". user)
   return (
     <div className="h-full rounded-3xl bg-[rgba(255,255,255,0.95)] p-4 shadow-lg backdrop-blur">
       <div className="mb-4 text-center">
         <div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-sky-600">
-          <span className="text-lg font-bold text-white">Admin</span>
+          <span className="text-lg font-bold text-white"></span>
         </div>
-        <h5 className="mb-1 mt-3 text-xl font-bold text-slate-900">
-          Admin Panel
-        </h5>
-        <p className="text-sm text-slate-500">System Administrator</p>
+     <div></div>
       </div>
 
       <nav className="flex flex-col gap-2">

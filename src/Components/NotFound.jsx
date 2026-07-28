@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "motion/react";
 import { cn, uiTokens } from "../utils/uiTokens.js";
 
 export default function NotFound() {
